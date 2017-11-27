@@ -2,11 +2,11 @@
     "require": {
         "silex/silex": "~2.0",
         "doctrine/dbal": "~2.5",
-		"twig/twig": "~1.28",
-		"symfony/twig-bridge": "~2.8|3.0.*",
-        "symfony/asset": "~2.8|3.0.*"
+		        "phpunit/phpunit": "~4.8",
+        "symfony/browser-kit": "~2.8|3.0.*",
+        "symfony/css-selector": "~2.8|3.0.*"
     },
     "autoload": {
-        "psr-4": {"MicroCMS\\": "src"}
+        "psr-4": {"PSI\\": "src"}
     }
 }

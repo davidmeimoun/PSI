@@ -7,16 +7,10 @@ use Symfony\Component\Debug\ExceptionHandler;
 ErrorHandler::register();
 ExceptionHandler::register();
 
-// Register service providers
+// Register service providers.
 $app->register(new Silex\Provider\DoctrineServiceProvider());
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/../views',
-));
-$app->register(new Silex\Provider\AssetServiceProvider(), array(
-    'assets.version' => 'v1'
-));
 
-// Register services
-$app['dao.article'] = function ($app) {
-    return new MicroCMS\DAO\ArticleDAO($app['db']);
-};
+// Register services.
+//$app['dao.article'] = function ($app) {
+ //   return new MicroCMS\DAO\ArticleDAO($app['db']);
+//};

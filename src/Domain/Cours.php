@@ -1,8 +1,8 @@
 <?php
 
-namespace MicroCMS\Domain;
+namespace GestionnaireLivret\Domain;
 
-class Article 
+class Cours 
 {
     /**
      * Article id.
