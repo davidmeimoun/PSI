@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/MamadouBabaMakadji/PSI.svg?branch=master)](https://travis-ci.org/MamadouBabaMakadji/PSI)
 
-[![Coverage Status](https://coveralls.io/repos/github/MamadouBabaMakadji/PSI/badge.svg?branch=master)](https://coveralls.io/github/MamadouBabaMakadji/PSI?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/MamadouBabaMakadji/PSI/badge.png?branch=master)](https://coveralls.io/github/MamadouBabaMakadji/PSI?branch=master)
 
 Phase d'initialisation.
 Pour utiliser le projet sur windows, Requis Uwamp 3.0.2, php 5.6.18
