@@ -10,3 +10,6 @@ ExceptionHandler::register();
 // Register service providers.
 $app->register(new Silex\Provider\DoctrineServiceProvider());
 
+$app['dao.diplome'] = function ($app) {
+    return new GestionnaireLivret\DAO\DiplomeDAO($app['db']);
+};
