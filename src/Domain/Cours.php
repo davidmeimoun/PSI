@@ -5,50 +5,155 @@ namespace GestionnaireLivret\Domain;
 class Cours 
 {
     /**
-     * Article id.
+     * Article id ligne.
      *
      * @var integer
      */
-    private $id;
+    private $id_ligne;
 
     /**
-     * Article title.
+     * Cours nom de l'enseignant.
      *
      * @var string
      */
-    private $title;
+    private $nomEnseignant;
 
     /**
-     * Article content.
+     * Cours numero harpege du professeur chargé du cours.
      *
      * @var string
      */
-    private $content;
+    private $numHarpegeEnseignant;
+    
+     /**
+     * Cours libelle du cours.
+     *
+     * @var string
+     */
+    private $libelle;
+    
+     /**
+     * Cours code du cours.
+     *
+     * @var string
+     */
+    private $code;
 
-    public function getId() {
-        return $this->id;
+     /**
+     * Cours libelle du groupe du cours.
+     *
+     * @var string
+     */
+    private $lib_groupe;
+    
+     /**
+     * Cours semestre du cours.
+     *
+     * @var string
+     */
+    private $semestre;
+    
+     /**
+     * Cours vet du cours.
+     *
+     * @var string
+     */
+    private $vet;
+    
+     /**
+     * Cours heure cm du cours.
+     *
+     * @var string
+     */
+    private $h_cm;
+    
+     /**
+     * Cours heure td du cours.
+     *
+     * @var string
+     */
+    private $h_td;
+    
+    function getId_ligne() {
+        return $this->id_ligne;
     }
 
-    public function setId($id) {
-        $this->id = $id;
-        return $this;
+    function getNomEnseignant() {
+        return $this->nomEnseignant;
     }
 
-    public function getTitle() {
-        return $this->title;
+    function getNumHarpegeEnseignant() {
+        return $this->numHarpegeEnseignant;
     }
 
-    public function setTitle($title) {
-        $this->title = $title;
-        return $this;
+    function getLibelle() {
+        return $this->libelle;
     }
 
-    public function getContent() {
-        return $this->content;
+    function getCode() {
+        return $this->code;
     }
 
-    public function setContent($content) {
-        $this->content = $content;
-        return $this;
+    function getLib_groupe() {
+        return $this->lib_groupe;
     }
+
+    function getSemestre() {
+        return $this->semestre;
+    }
+
+    function getVet() {
+        return $this->vet;
+    }
+
+    function getH_cm() {
+        return $this->h_cm;
+    }
+
+    function getH_td() {
+        return $this->h_td;
+    }
+
+    function setId_ligne($id_ligne) {
+        $this->id_ligne = $id_ligne;
+    }
+
+    function setNomEnseignant($nomEnseignant) {
+        $this->nomEnseignant = $nomEnseignant;
+    }
+
+    function setNumHarpegeEnseignant($numHarpegeEnseignant) {
+        $this->numHarpegeEnseignant = $numHarpegeEnseignant;
+    }
+
+    function setLibelle($libelle) {
+        $this->libelle = $libelle;
+    }
+
+    function setCode($code) {
+        $this->code = $code;
+    }
+
+    function setLib_groupe($lib_groupe) {
+        $this->lib_groupe = $lib_groupe;
+    }
+
+    function setSemestre($semestre) {
+        $this->semestre = $semestre;
+    }
+
+    function setVet($vet) {
+        $this->vet = $vet;
+    }
+
+    function setH_cm($h_cm) {
+        $this->h_cm = $h_cm;
+    }
+
+    function setH_td($h_td) {
+        $this->h_td = $h_td;
+    }
+
+
+
 }

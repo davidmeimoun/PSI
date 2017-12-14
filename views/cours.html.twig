@@ -1,0 +1,14 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}{{ cours.libelle }}{% endblock %}
+
+{% block content %}
+<p>
+    <h2>{{ cours.libelle }}</h2>
+    <p>{{ cours.nomEnseignant }}</p>
+    <p>{{ cours.h_cm }}</p>
+    <p>{{ cours.h_td }}</p>
+    
+   
+</p>
+{% endblock %}

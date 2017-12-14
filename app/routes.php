@@ -1,11 +1,16 @@
 <?php
 
+
+$app->get('/cours/{id}', function ($id) use ($app) {
+    $cours = $app['dao.cours']->find($id);
+    return $app['twig']->render('cours.html.twig', array('cours' => $cours));
+})->bind('cours');
+
 // Home page
 $app->get('/', function () use ($app) {
-    $diplomes = $app['dao.diplome']->findAll();
+    $str = 962;
+    $listCours = $app['dao.cours']->findByTeacher($str);
+    return $app['twig']->render('index.html.twig' ,array('coursList' =>$listCours));
+})->bind('home');
 
-    ob_start();             // start buffering HTML output
-    require '../views/view.php';
-    $view = ob_get_clean(); // assign HTML output to $view
-    return $view;
-});
+// Article details with comments
