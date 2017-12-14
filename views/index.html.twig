@@ -5,7 +5,7 @@
 {% block content %}
   {% for cours in coursList %}
         <cours>
-          <h2>   <a class="coursTitle" href="{{ path('cours', { 'id': cours.id_ligne } }}">{{ cours.libelle }}</a></h2>
+          <h2>   <a class="coursTitle" href="{{ path('cours', { 'id': cours.id_ligne }) }}">{{ cours.libelle }}</a></h2>
         </cours>
         {% endfor %}
 {% endblock %}
