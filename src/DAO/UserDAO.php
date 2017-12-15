@@ -1,0 +1,86 @@
+<?php
+
+namespace GestionnaireLivret\DAO;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use GestionnaireLivret\Domain\User;
+
+class UserDAO extends DAO implements UserProviderInterface
+{
+    /**
+     * Returns a user matching the supplied id.
+     *
+     * @param integer $id The user id.
+     *
+     * @return \MicroCMS\Domain\User|throws an exception if no matching user is found
+     */
+    public function find($id) {
+        $sql = "select * from LIVRET_PERSONNEL where ID_LIV_PERS=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($id));
+
+        if ($row){
+             return $this->buildDomainObject($row);
+        }
+        else{
+            throw new \Exception("No user matching id " . $id);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function loadUserByUsername($username)
+    {
+        $sql = "select * from LIVRET_PERSONNEL where USR_NAME=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($username));
+
+        if ($row){
+             return $this->buildDomainObject($row);
+        }
+        else{
+         throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));   
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function refreshUser(UserInterface $user)
+    {
+        $class = get_class($user);
+        if (!$this->supportsClass($class)) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
+        }
+        return $this->loadUserByUsername($user->getUsername());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function supportsClass($class)
+    {
+        return 'GestionnaireLivret\Domain\User' === $class;
+    }
+
+    /**
+     * Creates a User object based on a DB row.
+     *
+     * @param array $row The DB row containing User data.
+     * @return \MicroCMS\Domain\User
+     */
+    protected function buildDomainObject(array $row) {
+        $user = new User();
+        $user->setId($row['ID_LIV_PERS']);
+        $user->setUsername($row['USR_NAME']);
+        $user->setPassword($row['USR_PASSWORD']);
+        $user->setSalt($row['USR_SALT']);
+        $user->setRole($row['USR_ROLE']);
+        $user->setNom($row['NOM']);
+        $user->setPrenom($row['PRENOM']);
+        $user->setEmail($row['EMAIL']);
+        $user->setNumHarpege($row['NUM_HARPEGE']);
+        return $user;
+    }
+}
