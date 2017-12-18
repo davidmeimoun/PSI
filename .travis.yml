@@ -24,7 +24,7 @@ after_success:
 
 notifications:
    slack: 
-   room: 
+   rooms: 
    - gestionnairelivret:yMSyc8ngDZNfDxee1lWJX9NV#developpement
 email: false
 
