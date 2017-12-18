@@ -23,4 +23,6 @@ after_success:
   - travis_retry php coveralls.phar -v
 
 notifications:
+   slack: gestionnairelivret:yMSyc8ngDZNfDxee1lWJX9NV
 email: false
+
