@@ -37,15 +37,15 @@ class UserDAO extends DAO implements UserProviderInterface
      *
      * @return \MicroCMS\Domain\User|throws an exception if no matching user is found
      */
-    public function find($id) {
+    public function find($idPers) {
         $sql = "select * from LIVRET_PERSONNEL where ID_LIV_PERS=?";
-        $row = $this->getDb()->fetchAssoc($sql, array($id));
+        $row = $this->getDb()->fetchAssoc($sql, array($idPers));
 
         if ($row){
              return $this->buildDomainObject($row);
         }
         else{
-            throw new \Exception("No user matching id " . $id);
+            throw new \Exception("No user matching id " . $idPers);
         }
     }
 
@@ -134,9 +134,9 @@ class UserDAO extends DAO implements UserProviderInterface
      *
      * @param @param integer $id The user id.
      */
-    public function delete($id) {
+    public function delete($idPers) {
         // Delete the user
-        $this->getDb()->delete('LIVRET_PERSONNEL', array('ID_LIV_PERS' => $id));
+        $this->getDb()->delete('LIVRET_PERSONNEL', array('ID_LIV_PERS' => $idPers));
     }
     
         /**
@@ -154,8 +154,8 @@ class UserDAO extends DAO implements UserProviderInterface
         return $teachers;
     }
     
-        public function getEditTeacher($id) {
-        $sql = "select ID_PERS as ID_LIV_PERS, NUM_HARPEGE,NOM as USR_NAME,NOM as USR_PASSWORD,NOM as USR_SALT, NOM as USR_ROLE, NOM, PRENOM, EMAIL FROM PERSONNEL where ID_PERS =".$id;
+        public function getEditTeacher($idPers) {
+        $sql = "select ID_PERS as ID_LIV_PERS, NUM_HARPEGE,NOM as USR_NAME,NOM as USR_PASSWORD,NOM as USR_SALT, NOM as USR_ROLE, NOM, PRENOM, EMAIL FROM PERSONNEL where ID_PERS =".$idPers;
         $result = $this->getDb()->fetchAll($sql);
         // Convert query result to an array of domain objects
         $teachers = array();
