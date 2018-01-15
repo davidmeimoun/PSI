@@ -7,9 +7,23 @@ use GestionnaireLivret\Form\Type\UserType;
 // Add a user
 $app->match('/admin/user/add', function(Request $request) use ($app) {
     $user = new User();
-    $userForm = $app['form.factory']->create(UserType::class, $user);
+    $teachers = $app['dao.user']->getAllTeacher();
+    $userForm = $app['form.factory']->create(UserType::class, $user, array('teacher_choices' => $teachers));
     $userForm->handleRequest($request);
+    
     if ($userForm->isSubmitted() && $userForm->isValid()) {
+        // Retrieve select teacher informations
+        $teacherID = $user->getId()->getId();
+        $teacherNumHarpege = $user->getId()->getNumHarpege();
+        $teacherEmail = $user->getId()->getEmail();
+        $teacherName = $user->getId()->getNom();
+        $teacherFirstName = $user->getId()->getPrenom();
+        //Update user informations
+        $user->setId($teacherID);
+        $user->setNumHarpege($teacherNumHarpege);
+        $user->setEmail($teacherEmail);
+        $user->setNom($teacherName);
+        $user->setPrenom($teacherFirstName);
         // generate a random salt value
         $salt = substr(md5(time()), 0, 23);
         $user->setSalt($salt);
@@ -30,9 +44,22 @@ $app->match('/admin/user/add', function(Request $request) use ($app) {
 // Edit an existing user
 $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) {
     $user = $app['dao.user']->find($id);
-    $userForm = $app['form.factory']->create(UserType::class, $user);
+    $teacher = $app['dao.user']->getEditTeacher($id);
+    $userForm = $app['form.factory']->create(UserType::class, $user, array('teacher_choices' => $teacher));
     $userForm->handleRequest($request);
+    
     if ($userForm->isSubmitted() && $userForm->isValid()) {
+        $teacherID = $user->getId()->getId();
+        $teacherNumHarpege = $user->getId()->getNumHarpege();
+        $teacherEmail = $user->getId()->getEmail();
+        $teacherName = $user->getId()->getNom();
+        $teacherFirstName = $user->getId()->getPrenom();
+        //Update user informations
+        $user->setId($teacherID);
+        $user->setNumHarpege($teacherNumHarpege);
+        $user->setEmail($teacherEmail);
+        $user->setNom($teacherName);
+        $user->setPrenom($teacherFirstName);
         $plainPassword = $user->getPassword();
         // find the encoder for the user
         $encoder = $app['security.encoder_factory']->getEncoder($user);
@@ -49,8 +76,6 @@ $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) 
 
 // Remove a user
 $app->get('/admin/user/{id}/delete', function($id, Request $request) use ($app) {
-    // Delete all associated comments
-    $app['dao.comment']->deleteAllByUser($id);
     // Delete the user
     $app['dao.user']->delete($id);
     $app['session']->getFlashBag()->add('success', 'The user was successfully removed.');
