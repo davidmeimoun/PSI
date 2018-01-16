@@ -19,6 +19,17 @@
 <div class="well">
 {{ form_start(userForm, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="form-group">
+        {{ form_label(userForm.id, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-2">
+            {{ form_errors(userForm.id) }}
+            {{ form_widget(userForm.id, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
         {{ form_label(userForm.username, null, { 'label_attr':  {
             'class': 'col-sm-5 control-label'
         }}) }}

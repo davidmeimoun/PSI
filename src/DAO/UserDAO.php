@@ -37,15 +37,15 @@ class UserDAO extends DAO implements UserProviderInterface
      *
      * @return \MicroCMS\Domain\User|throws an exception if no matching user is found
      */
-    public function find($id) {
+    public function find($idPers) {
         $sql = "select * from LIVRET_PERSONNEL where ID_LIV_PERS=?";
-        $row = $this->getDb()->fetchAssoc($sql, array($id));
+        $row = $this->getDb()->fetchAssoc($sql, array($idPers));
 
         if ($row){
              return $this->buildDomainObject($row);
         }
         else{
-            throw new \Exception("No user matching id " . $id);
+            throw new \Exception("No user matching id " . $idPers);
         }
     }
 
@@ -91,22 +91,41 @@ class UserDAO extends DAO implements UserProviderInterface
      * @param \MicroCMS\Domain\User $user The user to save
      */
     public function save(User $user) {
+        // Information souvant manquante dans la table Personnel(Teacher)
+        if($user->getEmail()==null){
+            $user->setEmail("null");
+        }
         $userData = array(
-            'usr_name' => $user->getUsername(),
-            'usr_salt' => $user->getSalt(),
-            'usr_password' => $user->getPassword(),
-            'usr_role' => $user->getRole()
+            'ID_LIV_PERS'=> $user->getId(),
+            'NUM_HARPEGE'=> $user->getNumHarpege(),
+            'USR_PASSWORD' => $user->getPassword(),
+            'USR_SALT' => $user->getSalt(),
+            'NOM'=> $user->getNom(),
+            'PRENOM'=> $user->getPrenom(),
+            'EMAIL' => $user->getEmail(),
+            'USR_ROLE' => $user->getRole(),
+            'USR_NAME' => $user->getUsername()
             );
 
-        if ($user->getId()) {
+        if ($this->isExistingUserInDB($user)) {
             // The user has already been saved : update it
-            $this->getDb()->update('t_user', $userData, array('usr_id' => $user->getId()));
+            $this->getDb()->update('LIVRET_PERSONNEL', $userData, array('ID_LIV_PERS' => $user->getId()));
         } else {
             // The user has never been saved : insert it
-            $this->getDb()->insert('t_user', $userData);
+            $this->getDb()->insert('LIVRET_PERSONNEL', $userData);
             // Get the id of the newly created user and set it on the entity.
             $id = $this->getDb()->lastInsertId();
             $user->setId($id);
+        }
+    }
+    
+    public function isExistingUserInDB(User $user) {
+        $req = "select * from LIVRET_PERSONNEL where ID_LIV_PERS = ".$user->getId();
+        $result = $this->getDb()->executeQuery($req); 
+        if($result->fetch() == null){
+            return FALSE;
+        }else{
+            return TRUE;
         }
     }
 
@@ -115,9 +134,36 @@ class UserDAO extends DAO implements UserProviderInterface
      *
      * @param @param integer $id The user id.
      */
-    public function delete($id) {
+    public function delete($idPers) {
         // Delete the user
-        $this->getDb()->delete('t_user', array('usr_id' => $id));
+        $this->getDb()->delete('LIVRET_PERSONNEL', array('ID_LIV_PERS' => $idPers));
+    }
+    
+        /**
+     * Retrieve all personnel from the database.
+     */
+    public function getAllTeacher() {
+        $sql = "select ID_PERS as ID_LIV_PERS, NUM_HARPEGE,NOM as USR_NAME,NOM as USR_PASSWORD,NOM as USR_SALT, NOM as USR_ROLE, NOM, PRENOM, EMAIL FROM PERSONNEL";
+        $result = $this->getDb()->fetchAll($sql);
+        // Convert query result to an array of domain objects
+        $teachers = array();
+        foreach ($result as $row) {
+            $id = $row['ID_LIV_PERS']." - ".$row['NOM'];
+            $teachers[$id] = $this->buildDomainObject($row);
+        }
+        return $teachers;
+    }
+    
+        public function getEditTeacher($idPers) {
+        $sql = "select ID_PERS as ID_LIV_PERS, NUM_HARPEGE,NOM as USR_NAME,NOM as USR_PASSWORD,NOM as USR_SALT, NOM as USR_ROLE, NOM, PRENOM, EMAIL FROM PERSONNEL where ID_PERS =".$idPers;
+        $result = $this->getDb()->fetchAll($sql);
+        // Convert query result to an array of domain objects
+        $teachers = array();
+        foreach ($result as $row) {
+            $id = $row['ID_LIV_PERS']." - ".$row['NOM'];
+            $teachers[$id] = $this->buildDomainObject($row);
+        }
+        return $teachers;
     }
 
     /**
@@ -137,6 +183,8 @@ class UserDAO extends DAO implements UserProviderInterface
         $user->setPrenom($row['PRENOM']);
         $user->setEmail($row['EMAIL']);
         $user->setNumHarpege($row['NUM_HARPEGE']);
+        
         return $user;
     }
+    
 }
