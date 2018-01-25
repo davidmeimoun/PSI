@@ -3,12 +3,53 @@
 {% block title %}{{ cours.libelle }}{% endblock %}
 
 {% block content %}
-<p>
-    <h2>{{ cours.libelle }}</h2>
-    <p>{{ cours.nomEnseignant }}</p>
-    <p>{{ cours.h_cm }}</p>
-    <p>{{ cours.h_td }}</p>
-    
-   
-</p>
+              <table class="table-bordered table">
+
+            <thead class="active">
+                <th>Code Ec :{{ cours.code }}</th>
+                <th>Intitulé EC :{{ cours.libelle }} </th>
+                <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td }}</th>
+                <th>Enseignant : {{ cours.nomEnseignant}}</th>
+            </thead>
+</table>
+
+            <form>
+ <div class="form-group">
+    <label for="exampleTextarea">Objectifs</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.objectifs}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">Compétences</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.competences}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">Pré-requis</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.prerequis}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">Approche pédagogique</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.plan_cours}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">Bibliographie</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.bibliographie}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">Espace cours en ligne</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">Modalités de contôle</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.modalite_controle}}{% endif %}</textarea>
+  </div>
+ <div class="form-group">
+    <label for="exampleTextarea">ERASMUS</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.erasmus}}{% endif %}</textarea>
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+  
+            </form>
+  
+
 {% endblock %}
