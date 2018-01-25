@@ -62,3 +62,13 @@ $app['dao.user'] = function ($app) {
 $app['dao.cours'] = function ($app) {
     return new GestionnaireLivret\DAO\CoursDAO($app['db']);
 };
+
+$app['dao.ue'] = function ($app) {
+    return new GestionnaireLivret\DAO\UeDAO($app['db']);
+};
+$app['dao.parcours'] = function ($app) {
+    return new GestionnaireLivret\DAO\ParcoursDAO($app['db']);
+};
+$app['dao.presentationEc'] = function ($app) {
+    return new GestionnaireLivret\DAO\PresentationEcDAO($app['db']);
+};
