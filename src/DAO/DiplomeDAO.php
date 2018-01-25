@@ -22,7 +22,16 @@ class DiplomeDAO extends DAO
     }
 
 
-
+    public function find($id) {
+        $sql = "select * from DIPLOME where ID_DIP=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($id));
+        if ($row) {
+            return $this->buildDomainObject($row);
+        } else {
+            throw new \Exception("No diplome matching id " . $id);
+        }
+    }
+    
     protected function buildDomainObject(array $row) {
                 $diplome = new Diplome();
         $diplome->setId($row['ID_DIP']);
