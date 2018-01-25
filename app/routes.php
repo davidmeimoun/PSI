@@ -93,6 +93,9 @@ $app->get('/login', function(Request $request) use ($app) {
 
 $app->get('/cours/{id}', function ($id) use ($app) {
     $cours = $app['dao.cours']->find($id);
+    $presentation = $app['dao.presentationEc']->findByEC($cours->getId_ligne());
+    $cours -> setPresentation($presentation);
+            
     return $app['twig']->render('cours.html.twig', array('cours' => $cours));
 })->bind('coursDetail');
 
@@ -116,4 +119,51 @@ $app->get('/admin', function() use ($app) {
         'users' => $users));
 })->bind('admin');
 
+
 // Article details with comments
+$app->get('/ue/{id}', function ($id) use ($app) {
+  
+    $listUe = $app['dao.ue']->findByParcours($id);
+    $ec = array();
+    foreach($listUe as $ue)
+    {
+        $ec = $app['dao.cours']->findByUE($ue->getId());
+       $ue->setEc($ec);
+    }
+        
+        return $app['twig']->render('ue.html.twig' ,array('ueList' =>$listUe, 'parcours' => $id));
+    
+})->bind('ue');
+$app->get('/parcours', function () use ($app) {
+  
+    $listParcours = $app['dao.parcours']->findAll();     
+        return $app['twig']->render('parcours.html.twig' ,array('parcoursList' =>$listParcours));
+    
+})->bind('parcours');
+$app->get('/generatePDF/{id}', function ($id) use ($app) {
+ 
+    $return = shell_exec('wkhtmltopdf http://localhost/PSI/web/index.php/ue/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
+    return $app->redirect('http://localhost:8085/PSI/web/livret'.$id.'.pdf');
+})->bind('generatePDF');
+$app->get('/generateMarkdown/{id}', function ($id) use ($app) {
+    
+$return = shell_exec('pandoc -s -r html http://localhost/PSI/web/index.php/ue/'.$id.' -o /var/www/html/PSI/web/livret'.$id.'.text ');//readfile("http://localhost/GestionnaireLivret/Livret/web/index.pdf/");
+        return $app->redirect('http://localhost:8085/PSI/web/livret'.$id.'.text');
+})->bind('generateMarkdown');
+$app->get('/enseignements/{id}', function ($id) use ($app) {
+  
+    $listUe = $app['dao.ue']->findByParcours($id);
+    $ec = array();
+    foreach($listUe as $ue)
+    {
+        $ec = $app['dao.cours']->findByUE($ue->getId());
+            foreach($ec as $e){
+                $presentation = $app['dao.presentationEc']->findByEC($e->getId_ligne());
+                $e -> setPresentation($presentation);
+            }
+       $ue->setEc($ec);
+    }
+        
+        return $app['twig']->render('enseignements.html.twig' ,array('ueList' =>$listUe, 'parcours' => $id));
+    
+})->bind('enseignements');
