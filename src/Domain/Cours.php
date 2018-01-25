@@ -74,6 +74,22 @@ class Cours
      */
     private $h_td;
     
+     /**
+     * ects.
+     *
+     * @var string
+     */
+    
+    private $ects;
+    
+     /**
+     * Presentation.
+     *
+     * @var string
+     */    
+    private $presentation;
+    
+    
     function getId_ligne() {
         return $this->id_ligne;
     }
@@ -154,6 +170,17 @@ class Cours
         $this->h_td = $h_td;
     }
 
-
+    function getPresentation() {
+        return $this->presentation;
+    }
+    function setPresentation($presentation) {
+        $this->presentation = $presentation;
+    }
+  function getEcts() {
+        return $this->ects;
+    }
+    function setEcts($ects) {
+        $this->ects = $ects;
+    }
 
 }
