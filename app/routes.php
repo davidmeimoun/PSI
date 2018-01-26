@@ -142,7 +142,7 @@ $app->get('/parcours', function () use ($app) {
 })->bind('parcours');
 $app->get('/generatePDF/{id}', function ($id) use ($app) {
  
-    $return = shell_exec('wkhtmltopdf http://localhost/PSI/web/index.php/ue/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
+    $return = shell_exec('sudo wkhtmltopdf http://localhost/PSI/web/index.php/ue/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
     return $app->redirect('http://localhost:8085/PSI/web/livret'.$id.'.pdf');
 })->bind('generatePDF');
 $app->get('/generateMarkdown/{id}', function ($id) use ($app) {
