@@ -2,6 +2,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use GestionnaireLivret\Domain\Cours;
 use GestionnaireLivret\Domain\User;
+
 use GestionnaireLivret\Domain\PresentationEc;
 use GestionnaireLivret\Form\Type\UserType;
 use GestionnaireLivret\Form\Type\PresentationEcType;
@@ -142,6 +143,7 @@ $app->match('/cours/{id}', function ($id, Request $request) use ($app) {
     }
             
     return $app['twig']->render('cours.html.twig', array('cours' => $cours,'presentationEcForm' => $presentationEcForm->createView()));
+
 })->bind('coursDetail');
 
 

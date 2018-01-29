@@ -38,6 +38,7 @@ class PresentationEcDAO extends DAO
             $presentationId = $row['ID_PRESENTATION'];
             $presentation[$presentationId] = $this->buildDomainObject($row);
         }
+
         return array_shift(array_slice($presentation, 0, 1));
 //            return $presentation;
     }
