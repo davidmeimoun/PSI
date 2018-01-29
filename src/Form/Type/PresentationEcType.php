@@ -1,0 +1,114 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace GestionnaireLivret\Form\Type;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+/**
+ * Description of PrensentationEcType
+ *
+ * @author makadji
+ */
+class PresentationEcType extends AbstractType {
+    
+//    private $fid_ec;
+    private $objectifs;
+    private $competences;
+    private $prerequis;
+    private $plan_cours;
+    private $bibliographie;
+    private $cours_en_ligne;
+    private $modalite_controle;
+    private $erasmus;
+    
+     public function buildForm(FormBuilderInterface $builder, array $options)
+    {   
+//        $this->fid_ec = $options['fid_ec'];
+        $this->objectifs = $options['objectifs'];
+        $this->competences = $options['competences'];
+        $this->prerequis = $options['prerequis'];
+        $this->plan_cours = $options['plan_cours'];
+        $this->bibliographie = $options['bibliographie'];
+        $this->cours_en_ligne = $options['cours_en_ligne'];
+        $this->modalite_controle = $options['modalite_controle'];
+        $this->erasmus = $options['erasmus'];
+         
+        $builder
+//            ->add('fid_ec', \Symfony\Component\Form\Extension\Core\Type\HiddenType::class, array('data' => $this->fid_ec))
+            ->add('objectifs', TextareaType::class, array(
+                'label' => 'Objectifs' ,
+                'data' => $this->objectifs,
+                'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                 ->add('competences', TextareaType::class, array(
+                'label' => 'Compétences' ,
+                'data' => $this->competences,
+                 'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                 ->add('prerequis', TextareaType::class, array(
+                'label' => 'Pré-requis' ,
+                'data' => $this->prerequis,
+                 'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                 ->add('plan_cours', TextareaType::class, array(
+                'label' => 'Approche pédagogique' ,
+                'data' => $this->plan_cours,
+                 'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                 ->add('bibliographie', TextareaType::class, array(
+                'label' => 'Bibliographie' ,
+                'data' => $this->bibliographie,
+                'required' => true,
+            ))
+                 ->add('cours_en_ligne', TextareaType::class, array(
+                'label' => 'Espace cours en ligne' ,
+                'data' => $this->cours_en_ligne,
+                 'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                 ->add('modalite_controle', TextareaType::class, array(
+                'label' => 'Modalités de contôle' ,
+                'data' => $this->modalite_controle,
+                 'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                 ->add('erasmus', TextareaType::class, array(
+                'label' => 'ERASMUS' ,
+                'data' => $this->erasmus,
+                'required' => true,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ));
+    }
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'objectifs' => null,
+            'competences' => null,
+            'prerequis' => null,
+            'plan_cours' => null,
+            'bibliographie' => null,
+            'cours_en_ligne' => null,
+            'modalite_controle' => null,
+            'erasmus' => null,
+        ));
+    }
+
+    public function getName()
+    {
+        return 'presentation';
+    }
+}

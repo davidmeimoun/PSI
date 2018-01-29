@@ -1,0 +1,11 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  {% for cours in coursList %}
+        <cours>
+          <h2>   <a class="coursTitle" href="{{ path('coursDetail', { 'id': cours.id_ligne }) }}">{{ cours.libelle }}</a></h2>
+        </cours>
+        {% endfor %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Enseignements{% endblock %}
+
+
+{% block content %}
+    <h1> Maquette du parcours </h1>
+    <table class="table-bordered table">
+        <thead class="">
+            <th> Semestre </th>
+            <th> CM </th>
+            <th> TD </th>
+            <th> ECTS </th>  
+        </thead>
+  {% for ue in ueList %}
+        <UE>
+            <tr class="active">
+                <td>{{ ue.libelle }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+          {% for cours in ue.ec %}
+          <cours>
+              <tr>
+              <td> {{ cours.libelle }}</td>
+              <td>{{ cours.h_cm}} </td>
+              <td>{{ cours.h_td }}</td>
+              <td>{{ cours.ects }}</td>
+              </tr>
+          {% endfor %}
+           </cours>
+        {% endfor %}
+        
+    </table>
+        
+        <a class="btn-info" href="{{ path('generatePDF', { 'id': parcours }) }}" target=\"_BLANK\">Génerer le pdf</a>
+        <a class="btn-default" href="{{ path('generateMarkdown', { 'id': parcours }) }}" target=\"_BLANK\">Génerer le markdown</a>
+        <a class="btn-default" href="{{ path('enseignements', { 'id': parcours }) }}" >Page des enseignements</a>
+{% endblock %}

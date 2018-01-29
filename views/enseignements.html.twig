@@ -1,0 +1,99 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Maquette du diplome{% endblock %}
+
+
+{% block content %}
+    <h1> Maquette du parcours </h1>
+    
+
+  {% for ue in ueList %}
+                {% for cours in ue.ec %}
+                                       <cours>
+              <table class="table-bordered table">
+
+            <thead class="active">
+                <th>Code Ec :{{ cours.code }}</th>
+                <th>Intitulé EC :{{ cours.libelle }} </th>
+                <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td }}</th>
+                <th>Enseignant : {{ cours.nomEnseignant}}</th>
+            </thead>
+
+
+            <form>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Objectifs</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.objectifs}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Compétences</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.competences}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+  
+ <div class="form-group">
+    <label for="exampleTextarea">Pré-requis</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.prerequis}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Approche pédagogique</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.plan_cours}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Bibliographie</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.bibliographie}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Espace cours en ligne</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Modalités de contôle</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.modalite_controle}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">ERASMUS</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3">{%if not cours.presentation is empty %}{{cours.presentation.erasmus}}{% endif %}</textarea>
+  </div>
+                    </td>
+                </tr>
+                         
+</cours>
+</table>
+        {% endfor %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        <a class="btn-info" href="{{ path('generatePDF', { 'id': parcours }) }}" target=\"_BLANK\">Génerer le pdf</a>
+        <a class="btn-default" href="{{ path('generateMarkdown', { 'id': parcours }) }}" target=\"_BLANK\">Génerer le markdown</a>
+   </form>
+
+{% endblock %}
