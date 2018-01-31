@@ -32,7 +32,7 @@ public function findMention($id) {
        $sql = "select description from PRESENTATION_FORMATION where FID_DIP=?";
        $row = $this->getDb()->fetchAssoc($sql, array($id));
        if ($row) {
-           return $row['DESCRIPTION'];
+           return $row['DESCRIPTIF'];
        } else {
            //throw new \Exception("No presentation matching id " . $id);
        }  
