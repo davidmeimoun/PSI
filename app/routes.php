@@ -188,7 +188,7 @@ $app->get('/parcours', function () use ($app) {
 })->bind('parcours');
 $app->get('/generatePDF/{id}', function ($id) use ($app) {
  
-    shell_exec('sudo wkhtmltopdf http://localhost/PSI/web/index.php/ue/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
+    shell_exec('sudo wkhtmltopdf http://localhost/PSI/web/index.php/livret/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
     return $app->redirect('http://localhost:8085/PSI/web/livret'.$id.'.pdf');
 })->bind('generatePDF');
 $app->get('/generateMarkdown/{id}', function ($id) use ($app) {
@@ -213,3 +213,46 @@ $app->get('/enseignements/{id}', function ($id) use ($app) {
         return $app['twig']->render('enseignements.html.twig' ,array('ueList' =>$listUe, 'parcours' => $id));
     
 })->bind('enseignements');
+
+$app->get('/livret/{id}', function ($id) use ($app) {
+
+   // On récupère la mention
+   $mention = $app['dao.livret']->findMention($id);
+   
+   // On récupère le calendrier
+   $calendrier = $app['dao.livret']->findCalendrier($id);
+   // On récupère l'organigramme
+   $organigramme = $app['dao.organigramme']->find($id);
+   
+   
+   // On récupère la présentation de l'UE
+   $presentationForm = $app['dao.livret']->findPresentation($id);
+   
+   // On récupère la charte du vivre ensemble
+   $charte = $app['dao.livret']->findCharte();
+   
+   // On récupère les modalités de controle
+   $modalites = $app['dao.livret']->findModalitesControle($id);
+ 
+   // On récupère les stages
+   $stages = $app['dao.livret']->findStages($id);
+   
+   // On récupère les modules enseignements
+   $modules = $app['dao.livret']->findModulesEnseignement($id);
+   
+   // On récupère les UE et EC d'un parcours
+   $listUe = $app['dao.ue']->findByParcours($id);
+   $ec = array();
+   foreach($listUe as $ue)
+   {
+       $ec = $app['dao.cours']->findByUE($ue->getId());
+           foreach($ec as $e){
+               $presentation = $app['dao.presentationEc']->findByEC($e->getId_ligne());
+               $e -> setPresentation($presentation);
+           }
+      $ue->setEc($ec);
+   }
+       
+       return $app['twig']->render('livret.html.twig' ,array('mention'=>$mention, 'ueList' =>$listUe, 'parcours' => $id, 'organigramme'=>$organigramme, 'presentationForm'=>$presentationForm, 'charte'=>$charte,'modalites'=>$modalites,'stages'=>$stages,'modules'=>$modules, 'calendrier'=>$calendrier));
+   
+})->bind('livret');
