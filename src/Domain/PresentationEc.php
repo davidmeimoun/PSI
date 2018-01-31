@@ -39,7 +39,7 @@ class PresentationEc
  function getcours_en_ligne() {
      return $this->cours_en_ligne;
  }
- function getModaliteControle() {
+ function getmodalite_controle() {
      return $this->modalite_controle;
  }
  function getErasmus() {
