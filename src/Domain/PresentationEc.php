@@ -36,7 +36,7 @@ class PresentationEc
      return $this->bibliographie;
  }
 
- function getCoursEnLigne() {
+ function getcours_en_ligne() {
      return $this->cours_en_ligne;
  }
  function getModaliteControle() {
