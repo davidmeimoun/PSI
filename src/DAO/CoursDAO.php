@@ -9,56 +9,54 @@ class CoursDAO extends DAO
 {
    
            public function findAll() {
-       $sql = "select * from VUE_EC where VET != 'Charge pour fonction'"; // order by ID_DIP desc
+       $sql = "select * from EC; // order by ID_DIP desc
        $result = $this->getDb()->fetchAll($sql);
        
        // Convert query result to an array of domain objects
        $cours = array();
        foreach ($result as $row) {
-           $coursId = $row['ID_LIGNE'];
+           $coursId = $row['ID_EC'];
            $cours[$coursId] = $this->buildDomainObject($row);
        }
        return $cours;
    }
    
-       public function findByTeacher($FID_PERS){
-               $sql = 'select * from VUE_EC  where VET != \'Charge pour fonction\' and FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
-       $result = $this->getDb()->fetchAll($sql);
-       
-       // Convert query result to an array of domain objects
-       $cours = array();
-       foreach ($result as $row) {
-           $coursId = $row['ID_LIGNE'];
-           $cours[$coursId] = $this->buildDomainObject($row);
-       }
-       return $cours;
-   }
+public function findByTeacher($FID_PERS){
+              $sql = 'select * from EC, LIGNE_SERVICE L where L.FID_EC=EC.ID_EC and L.FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
+      $result = $this->getDb()->fetchAll($sql);
+     
+      // Convert query result to an array of domain objects
+      $cours = array();
+      foreach ($result as $row) {
+          $coursId = $row['ID_LIGNE'];
+          $cours[$coursId] = $this->buildDomainObject($row);
+      }
+      return $cours;
+  }
    
-   public function find($id) {
-       $sql = "select * from VUE_EC where VET != 'Charge pour fonction' and ID_LIGNE=?";
-       $row = $this->getDb()->fetchAssoc($sql, array($id));
+public function find($id) {
+      $sql = "select * from EC where ID_EC=?";
+      $row = $this->getDb()->fetchAssoc($sql, array($id));
 
-       if ($row) {
-           return $this->buildDomainObject($row);
-       } else {
-           throw new \Exception("No cours matching id " . $id);
-       }
-   }
-      public function findByUE($ue) {
-       //$sql = 'select * from EC, EC_UE_LISTEEC L where EC.ID_EC = L.FID_EC and L.FID_UE=' .$ue .'';// order by ID_DIP desc
-          $sql = 'select * from VUE_EC V, EC_UE_LISTEEC L  where VET != \'Charge pour fonction\' and V.ID_LIGNE = L.FID_EC and L.FID_UE=' .$ue .'';
-          $result = $this->getDb()->fetchAll($sql);
-       
-       // Convert query result to an array of domain objects
-       $ec = array();
-       foreach ($result as $row) {
-           $ecId = $row['ID_LIGNE'];
-           $ec[$ecId] = $this->buildDomainObject($row);
-       }
-       return $ec;
-   }
-
-
+      if ($row) {
+          return $this->buildDomainObject($row);
+      } else {
+          throw new \Exception("No cours matching id " . $id);
+      }
+  }
+public function findByUE($ue) {
+      //$sql = 'select * from EC, EC_UE_LISTEEC L where EC.ID_EC = L.FID_EC and L.FID_UE=' .$ue .'';// order by ID_DIP desc
+         $sql = 'select * from EC , EC_UE_LISTEEC L  where  EC.ID_EC = L.FID_EC and L.FID_UE=' .$ue .'';
+         $result = $this->getDb()->fetchAll($sql);
+     
+      // Convert query result to an array of domain objects
+      $ec = array();
+      foreach ($result as $row) {
+          $ecId = $row['ID_EC'];
+          $ec[$ecId] = $this->buildDomainObject($row);
+      }
+      return $ec;
+  }
 
 
    protected function buildDomainObject(array $row) {
