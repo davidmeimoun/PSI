@@ -3,9 +3,77 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-  {% for parcours in parcoursList %}
-        <parcours>
-          <h2><a class="coursTitle" href="{{ path('ue', { 'id': parcours.id }) }}">{{ parcours.libelle }}</a></h2>
-        </parcours>
-        {% endfor %}
+
+              <div class="container-fluid">
+   
+        
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="card card-nav-tabs">
+                                <div class="card-header" data-background-color="purple">
+                                    <div class="nav-tabs-navigation">
+                                        <div class="nav-tabs-wrapper">
+                                            <span class="nav-tabs-title"></span>
+                                          <ul class="nav nav-tabs" data-tabs="tabs">
+                                                <li class="active">
+                                                    <a href="#profile" data-toggle="tab">
+                                                        <i class="material-icons">bug_report</i> UFR SEGMI
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                          </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="profile">
+                                            <table class="table">
+                                                <tbody>
+                                                      {% for parcours in parcoursList %}
+
+       <cours>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" name="optionsCheckboxes" checked>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>        <parcours>
+            
+            <a class="coursTitle" href="{{ path('livret', { 'id': parcours.id }) }}">{{ parcours.libelle }}</a>
+        </td>
+                                                        <td class="td-actions text-right">
+                                                            <a href="{{ path('livret', { 'id': parcours.id }) }}" title="Edit EC" class="btn btn-primary btn-simple btn-xs">
+                                                                <i class="material-icons">edit</i>
+                                                            </a>
+                                   
+                                                        </td>
+                                                                  <td class="td-actions text-right">
+                                                            <a href="{{ path('generatePDF', { 'id': parcours.id }) }}" target=\"_BLANK\" class="btn btn-primary btn-simple btn-xs">
+                                                                <i class="material-icons">Telecharger</i> 
+                                                                
+                                                            </a>
+                                   
+                                                        </td>
+                                                
+                                                    </tr>
+                                                                                                    </parcours>
+
+                                                     {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+                                     
 {% endblock %}
