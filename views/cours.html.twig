@@ -1,156 +1,187 @@
-{% extends "layout.html.twig" %}
-
-{% block title %}{{ cours.libelle }}{% endblock %}
-
-{% block content %}
-
-   <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-header" data-background-color="purple">
-                                    <h4 class="title">{{ cours.libelle }}</h4>
-                                    
-                                         <table class="table">
-                                        <thead class="text-primary category">
-                                            <th>Code Ec :{{ cours.code }}</th>
-                                 
-                                            <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td }}</th>
-                                            <th>Enseignant : {{ cours.nomEnseignant}}</th>
-                                        </thead>
-                                         </table>
-                                </div>
-                                <div class="card-content table-responsive">
-                                    <form>
-                                    <table class="table">
-                              
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Objectifs</h4>
-                                                    <div class="form-group h4-floating">
-                                                         
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.objectifs}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                                    
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Compétences</h4>
-                                                    <div class="form-group h4-floating">
-                                                         
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.competences}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Pré-requis</h4>
-                                                    <div class="form-group h4-floating">
-                                                        
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.prerequis}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Approche pédagogique</h4>
-                                                    <div class="form-group h4-floating">
-                                                        
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.plan_cours}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div></td>
-                                            </tr>
-                                                                                        <tr>
-                                                <td>
-                                                <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Bibliographie</h4>
-                                                    <div class="form-group h4-floating">
-                                                         
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.bibliographie}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div></td>
-                                            </tr>
-                                                                                        <tr>
-                                                <td>
-                                                <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Espace cours en ligne</h4>
-                                                    <div class="form-group h4-floating">
-                                                       
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div></td>
-                                            </tr>
-                                                                                        <tr>
-                                                <td>
-                                                <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">Modalités de contrôle</h4>
-                                                    <div class="form-group h4-floating">
-                                                      
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.modalite_controle}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div></td>
-                                            </tr>
-                                                                                        <tr>
-                                                <td>
-                                                <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <h4 class="text-primary">ERASMUS</h4>
-                                                    <div class="form-group h4-floating">
-                                                        <textarea class="form-control" rows="5">{%if not cours.presentation is empty %}{{cours.presentation.erasmus}}{% endif %}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div></td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                                                         <button type="submit" class="btn btn-primary pull-right">Valider les modifications</button>
-                                        <div class="clearfix"></div>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
- 
-                    </div>
-                </div>
-
-{% endblock %}
+{% extends "layout.html.twig" %}{% block title %}{{ cours.libelle }}{% endblock %}{% block content %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header" data-background-color="purple">
+					<h4 class="title">{{ cours.libelle }}</h4>
+					<table class="table">
+						<thead class="text-primary category">
+							<th>
+								Code Ec :{{ cours.code }}
+							</th>
+							<th>
+								Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td }}
+							</th>
+							<th>
+								Enseignant : {{ cours.nomEnseignant}}
+							</th>
+						</thead>
+					</table>
+				</div>
+				<div class="card-content table-responsive">
+					<form>
+						<table class="table">
+							<tbody>
+								<tr>
+									<td>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<h4 class="text-primary">Objectifs</h4>
+													{{ form_start(presentationEcForm, { 'attr': {'class': 'form-horizontal'} }) }}
+													<div class="form-group">
+														{{ form_label(presentationEcForm.objectifs, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.objectifs) }}{{ form_widget(presentationEcForm.objectifs, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">Compétences</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.competences, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.competences) }}{{ form_widget(presentationEcForm.competences, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">Pré-requis</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.prerequis, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.prerequis) }}{{ form_widget(presentationEcForm.prerequis, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">Approche pédagogique</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.plan_cours, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.plan_cours) }}{{ form_widget(presentationEcForm.plan_cours, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">Bibliographie</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.bibliographie, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.bibliographie) }}{{ form_widget(presentationEcForm.bibliographie, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">Espace cours en ligne</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.cours_en_ligne, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.cours_en_ligne) }}{{ form_widget(presentationEcForm.cours_en_ligne, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">Modalités de contrôle</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.modalite_controle, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.modalite_controle) }}{{ form_widget(presentationEcForm.modalite_controle, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<h4 class="text-primary">ERASMUS</h4>
+												<div class="form-group h4-floating">
+													<div class="form-group">
+														{{ form_label(presentationEcForm.erasmus, null, { 'label_attr':  {'class': 'col-sm-5 control-label'}}) }}
+														<div class="col-sm-4">
+															{{ form_errors(presentationEcForm.erasmus) }}{{ form_widget(presentationEcForm.erasmus, { 'attr':  {'class': 'form-control'}}) }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="submit" class="btn btn-primary pull-right">Valider les modifications</button>
+					<div class="clearfix"></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
