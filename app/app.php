@@ -72,3 +72,9 @@ $app['dao.parcours'] = function ($app) {
 $app['dao.presentationEc'] = function ($app) {
     return new GestionnaireLivret\DAO\PresentationEcDAO($app['db']);
 };
+$app['dao.livret'] = function ($app) {
+   return new GestionnaireLivret\DAO\LivretDAO($app['db']);
+};
+$app['dao.organigramme'] = function ($app) {
+   return new GestionnaireLivret\DAO\OrganigrammeDAO($app['db']);
+};
