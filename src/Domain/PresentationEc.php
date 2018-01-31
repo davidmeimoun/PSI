@@ -39,6 +39,9 @@ class PresentationEc
  function getcours_en_ligne() {
      return $this->cours_en_ligne;
  }
+  function getCoursEnLigne() {
+     return $this->cours_en_ligne;
+ }
  function getmodalite_controle() {
      return $this->modalite_controle;
  }
