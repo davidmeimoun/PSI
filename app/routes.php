@@ -2,7 +2,10 @@
 use Symfony\Component\HttpFoundation\Request;
 use GestionnaireLivret\Domain\Cours;
 use GestionnaireLivret\Domain\User;
+
+use GestionnaireLivret\Domain\PresentationEc;
 use GestionnaireLivret\Form\Type\UserType;
+use GestionnaireLivret\Form\Type\PresentationEcType;
 
 // Add a user
 $app->match('/admin/user/add', function(Request $request) use ($app) {
@@ -91,12 +94,56 @@ $app->get('/login', function(Request $request) use ($app) {
     ));
 })->bind('login');
 
-$app->get('/cours/{id}', function ($id) use ($app) {
+$app->match('/cours/{id}', function ($id, Request $request) use ($app) {
     $cours = $app['dao.cours']->find($id);
     $presentation = $app['dao.presentationEc']->findByEC($cours->getId_ligne());
     $cours -> setPresentation($presentation);
+    //Cas où nous n'avons pas de presentation pour un EC
+    if($presentation==null){
+        $objectifs = "";
+        $competences = "";
+        $prerequis = "";
+        $plan_cours = "";
+        $bibliographie = "";
+        $cours_en_ligne = "";
+        $modalite_controle = "";
+        $erasmus = "";
+    } else {
+        $objectifs = $presentation->getObjectifs();
+        $competences = $presentation->getCompetences();
+        $prerequis = $presentation->getPrerequis();
+        $plan_cours = $presentation->getPlanCours();
+        $bibliographie = $presentation->getBibliographie();
+        $cours_en_ligne = $presentation->getCoursEnLigne();
+        $modalite_controle = $presentation->getModaliteControle();
+        $erasmus = $presentation->getErasmus();
+    }
+
+    
+    $presentationEcForm = $app['form.factory']->create(PresentationEcType::class, $presentation, array('objectifs' => $objectifs,'competences' =>$competences ,
+        'prerequis' => $prerequis,'plan_cours' => $plan_cours,'bibliographie' => $bibliographie,'cours_en_ligne' => $cours_en_ligne,
+        'modalite_controle' => $modalite_controle,'erasmus' =>$erasmus ));
+    $presentationEcForm->handleRequest($request);
+    
+    if ($presentationEcForm->isSubmitted() && $presentationEcForm->isValid()) {
+        $presEc = new PresentationEc();
+        $presEc->setFidEc($cours->getId_ligne());
+        $presEc->setIdPresentation($cours->getId_ligne());
+        $presEc->setObjectifs($presentationEcForm['objectifs']->getData());
+        $presEc->setCompetences($presentationEcForm['competences']->getData());
+        $presEc->setPrerequis($presentationEcForm['prerequis']->getData());
+        $presEc->setPlanCours($presentationEcForm['plan_cours']->getData());
+        $presEc->setBibliographie($presentationEcForm['bibliographie']->getData());
+        $presEc->setCoursEnLigne($presentationEcForm['cours_en_ligne']->getData());
+        $presEc->setModaliteControle($presentationEcForm['modalite_controle']->getData());
+        $presEc->setErasmus($presentationEcForm['erasmus']->getData());
+        
+        $app['dao.presentationEc']->save($presEc);
+        $app['session']->getFlashBag()->add('success', 'The informations was successfully saved.');
+    }
             
-    return $app['twig']->render('cours.html.twig', array('cours' => $cours));
+    return $app['twig']->render('cours.html.twig', array('cours' => $cours,'presentationEcForm' => $presentationEcForm->createView()));
+
 })->bind('coursDetail');
 
 
@@ -120,7 +167,6 @@ $app->get('/admin', function() use ($app) {
 })->bind('admin');
 
 
-// Article details with comments
 $app->get('/ue/{id}', function ($id) use ($app) {
   
     $listUe = $app['dao.ue']->findByParcours($id);

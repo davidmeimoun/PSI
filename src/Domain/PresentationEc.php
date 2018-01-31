@@ -7,7 +7,7 @@ class PresentationEc
  private $objectifs;
  private $competences;
  private $prerequis;
- private $plan_cours;
+ private $planCours;
  private $bibliographie;
  private $cours_en_ligne;
  private $modalite_controle;
@@ -28,25 +28,28 @@ class PresentationEc
  function getPrerequis() {
      return $this->prerequis;
  }
- function getPlan_cours() {
+
+ function getPlanCours() {
      return $this->plan_cours;
  }
  function getBibliographie() {
      return $this->bibliographie;
  }
- function getCours_en_ligne() {
+
+ function getCoursEnLigne() {
      return $this->cours_en_ligne;
  }
- function getModalite_controle() {
+ function getModaliteControle() {
      return $this->modalite_controle;
  }
  function getErasmus() {
      return $this->erasmus;
  }
- function setId_presentation($id_presentation) {
+
+ function setIdPresentation($id_presentation) {
      $this->id_presentation = $id_presentation;
  }
- function setFid_ec($fid_ec) {
+ function setFidEc($fid_ec) {
      $this->fid_ec = $fid_ec;
  }
  function setObjectifs($objectifs) {
@@ -58,16 +61,19 @@ class PresentationEc
  function setPrerequis($prerequis) {
      $this->prerequis = $prerequis;
  }
- function setPlan_cours($plan_cours) {
+
+ function setPlanCours($plan_cours) {
      $this->plan_cours = $plan_cours;
  }
  function setBibliographie($bibliographie) {
      $this->bibliographie = $bibliographie;
  }
- function setCours_en_ligne($cours_en_ligne) {
+
+ function setCoursEnLigne($cours_en_ligne) {
      $this->cours_en_ligne = $cours_en_ligne;
  }
- function setModalite_controle($modalite_controle) {
+ 
+ function setModaliteControle($modalite_controle) {
      $this->modalite_controle = $modalite_controle;
  }
  function setErasmus($erasmus) {
