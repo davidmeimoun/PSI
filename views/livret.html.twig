@@ -1,0 +1,196 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+<!-- ******************* PAGE DE PRESENTATION ******************** -->
+<!--<div  style='width: 990px; height: 842pt; background-image: url({{ asset('/assets/img/livret.png')}}' >
+</div>-->
+<img src="{{ asset('/assets/img/livret.png')}}"/>
+<h1> {{mention}}</h1>
+<!-- ******************* CALENDRIER UNIVERSITAIRE ******************** -->
+<h1> Calendrier universitaire </h1>
+{%if calendrier is not empty %}
+    {{calendrier}}
+    {%endif%}
+<!-- ******************* ORGANIGRAMME ET CONTACTS ******************** -->
+
+<h1> Organigramme et Contact </h1>
+{%if organigramme is not empty %}
+    <Organigramme>
+    <h3> UNIVERSITÉ </h3>
+    {{ organigramme.universite }}
+    <h3> UFR </h3>
+    {{ organigramme.ufr }}
+    <h3> DÉPARTEMENT </h3>
+    {{ organigramme.departement }}
+    </Organigramme>
+    {%endif%}
+    
+<!-- ******************* PRESENTATION DE LA FORMATION ******************** -->
+<h1> Présentation de la formation </h1>
+{%if presentationForm is not empty %}
+    {{presentationForm}}
+    {%endif%}
+
+<!-- ******************* MAQUETTE DU DIPLOME ******************** -->
+  <h1> Maquette du parcours </h1>
+    <table class="table-bordered table">
+        <thead class="">
+            <th> Semestre </th>
+            <th> CM </th>
+            <th> TD </th>
+            <th> ECTS </th>  
+        </thead>
+  {% for ue in ueList %}
+        <UE>
+            <tr class="active">
+                <td>{{ ue.libelle }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+          {% for cours in ue.ec %}
+          <cours>
+              <tr>
+              <td> {{ cours.libelle }}</td>
+              <td>{{ cours.h_cm}} </td>
+              <td>{{ cours.h_td }}</td>
+              <td>{{ cours.ects }}</td>
+              </tr>
+          {% endfor %}
+           </cours>
+        {% endfor %}
+        
+    </table>
+
+<!-- ******************* PRESENTATION DES ENSEIGNEMENTS ******************** -->
+
+
+
+<h1> Présentation des enseignements </h1>
+    
+
+  {% for ue in ueList %}
+                {% for cours in ue.ec %}
+                                       <cours>
+              <table class="table-bordered table">
+
+            <thead class="active">
+                <th>Code Ec :{{ cours.code }}</th>
+                <th>Intitulé EC :{{ cours.libelle }} </th>
+                <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td }}</th>
+                <th>Enseignant : {{ cours.nomEnseignant}}</th>
+            </thead>
+
+
+            <form>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Objectifs</label>
+    {%if not cours.presentation is empty %}{{cours.presentation.objectifs}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Compétences</label>
+    {%if not cours.presentation is empty %}{{cours.presentation.competences}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+  
+ <div class="form-group">
+    <label for="exampleTextarea">Pré-requis</label>
+   {%if not cours.presentation is empty %}{{cours.presentation.prerequis}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Approche pédagogique</label>
+    {%if not cours.presentation is empty %}{{cours.presentation.plan_cours}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Bibliographie</label>
+   {%if not cours.presentation is empty %}{{cours.presentation.bibliographie}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Espace cours en ligne</label>
+    {%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">Modalités de contôle</label>
+    {%if not cours.presentation is empty %}{{cours.presentation.modalite_controle}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+ <div class="form-group">
+    <label for="exampleTextarea">ERASMUS</label>
+    {%if not cours.presentation is empty %}{{cours.presentation.erasmus}}{% endif %}
+  </div>
+                    </td>
+                </tr>
+                         
+</cours>
+</table>
+        {% endfor %}
+        {% endfor %}
+   
+   </form>
+
+
+<!-- ******************* MODULES ENSEIGNEMENT ******************** -->
+<h1> MODULES D'ENSEIGNEMENT TRANSVERSAUX / LANGUES VIVANTES / BONUS AU DIPLOME </h1>
+{%if modules is not empty %}
+    <h3> Modules transversaux </h3>
+    {{modules.modules_transversaux}}
+     <h3> Langues vivantes </h3>
+    {{modules.langues_vivantes}}
+     <h3> Bonus diplômes </h3>
+    {{modules.bonus_diplomes}}
+    {%endif%}
+<!-- ******************* STAGE ******************** -->
+<h1> STAGES </h1>
+{%if stages is not empty %}
+    {{stages}}
+    {%endif%}
+<!-- ******************* MODALITÉS DE CONTRÔLE ET EXAMENS ******************** -->
+<h1>MODALITES DE CONTROLE ET EXAMENS</h1>
+{%if modalites is not empty %}
+    {{modalites.descriptif}}
+<h3> Modalités générales </h3>
+{{modalites.modalites_generales}}
+<h3> Modalités spécifiques </h3>
+{{modalites.modalites_specifiques}}
+<h3> Particularités de validation </h3>
+{{modalites.particularite_validation}}
+<h3> Déroulement et charte des examens </h3>
+{{modalites.deroulement_charte_examens}}
+<h3> Délivrance du diplôme </h3>
+{{modalites.delivrance_diplome}}
+
+{%endif%}
+<!-- ******************* CHARTE DU VIVRE ENSEMBLE ******************** -->
+<h1> CHARTE DU VIVRE ENSEMBLE </h1>
+{%if charte is not empty %}
+    {{charte}}
+    {%endif%}
+
+{% endblock %}
