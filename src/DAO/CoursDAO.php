@@ -8,18 +8,18 @@ use GestionnaireLivret\Domain\Cours;
 class CoursDAO extends DAO
 {
    
-           public function findAll() {
-       $sql = "select * from EC; // order by ID_DIP desc
-       $result = $this->getDb()->fetchAll($sql);
-       
-       // Convert query result to an array of domain objects
-       $cours = array();
-       foreach ($result as $row) {
-           $coursId = $row['ID_EC'];
-           $cours[$coursId] = $this->buildDomainObject($row);
-       }
-       return $cours;
-   }
+public function findAll() {
+      $sql = "select * from EC"; // order by ID_DIP desc
+      $result = $this->getDb()->fetchAll($sql);
+     
+      // Convert query result to an array of domain objects
+      $cours = array();
+      foreach ($result as $row) {
+          $coursId = $row['ID_EC'];
+          $cours[$coursId] = $this->buildDomainObject($row);
+      }
+      return $cours;
+  }
    
 public function findByTeacher($FID_PERS){
               $sql = 'select * from EC, LIGNE_SERVICE L where L.FID_EC=EC.ID_EC and L.FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
@@ -59,21 +59,21 @@ public function findByUE($ue) {
   }
 
 
-   protected function buildDomainObject(array $row) {
-        $cours= new Cours();
-       $cours->setId_ligne($row['ID_LIGNE']);
-       $cours->setNomEnseignant($row['NOM']);
-       $cours->setNumHarpegeEnseignant($row['N_HARP']);
-       $cours->setLibelle($row['LIBELLE']);
-       $cours->setCode($row['CODE']);
-       $cours->setLib_groupe($row['LIB_GROUPE']);
-       $cours->setSemestre($row['SEM']);
-       $cours->setVet($row['VET']);
-       $cours->setH_cm($row['H_CM']);
-       $cours->setH_td($row['H_TD']);
-       $cours->setEcts($row['ECTS']);
-       
-       return $cours;
-   }
-}
+protected function buildDomainObject(array $row) {
+       $cours= new Cours();
+      $cours->setId_ligne($row['ID_EC']);
+      //$cours->setNomEnseignant($row['NOM']);
+      //$cours->setNumHarpegeEnseignant($row['N_HARP']);
+      $cours->setLibelle($row['LIBELLE_EC']);
+      $cours->setCode($row['COD_ELP']);
+      //$cours->setLib_groupe($row['LIB_GROUPE']);
+      //$cours->setSemestre($row['SEM']);
+      //$cours->setVet($row['VET']);
+      $cours->setH_cm($row['VOLUME_HEURE_CM']);
+      $cours->setH_td($row['VOLUME_HEURE_TD']);
+      $cours->setEcts($row['NB_CREDIT']);
+     
+      return $cours;
+  }
+  }
 
