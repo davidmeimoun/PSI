@@ -45,6 +45,10 @@ class PresentationEc
  function getmodalite_controle() {
      return $this->modalite_controle;
  }
+  function getModaliteControle() {
+     return $this->modalite_controle;
+ }
+ 
  function getErasmus() {
      return $this->erasmus;
  }
