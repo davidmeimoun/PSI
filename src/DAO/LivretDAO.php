@@ -29,7 +29,7 @@ public function findMention($id) {
    }
        
    public function findPresentation($id) {
-       $sql = "select description from PRESENTATION_FORMATION where ID_MENTION=?";
+       $sql = "select description from PRESENTATION_FORMATION where FID_DIP=?";
        $row = $this->getDb()->fetchAssoc($sql, array($id));
        if ($row) {
            return $row['DESCRIPTION'];
