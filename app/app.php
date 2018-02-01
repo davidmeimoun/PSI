@@ -31,7 +31,7 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'pattern' => '^/',
             'anonymous' => true,
             'logout' => true,
-           'form' => array('login_path' => '/login', 'check_path' => '/login_check', 'default_target_path' => '/cours'),
+           'form' => array('login_path' => '/login', 'check_path' => '/login_check', 'default_target_path' => '/verifNewUser'),
             'users' => function () use ($app) {
                  return new GestionnaireLivret\DAO\UserDAO($app['db']);
             },

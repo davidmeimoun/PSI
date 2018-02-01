@@ -104,14 +104,17 @@ class UserDAO extends DAO implements UserProviderInterface
             'PRENOM'=> $user->getPrenom(),
             'EMAIL' => $user->getEmail(),
             'USR_ROLE' => $user->getRole(),
-            'USR_NAME' => $user->getUsername()
+            'USR_NAME' => $user->getUsername(),
+            'NEW_USER' => 1
             );
 
         if ($this->isExistingUserInDB($user)) {
             // The user has already been saved : update it
+            $userData['NEW_USER'] = 0;
             $this->getDb()->update('LIVRET_PERSONNEL', $userData, array('ID_LIV_PERS' => $user->getId()));
         } else {
             // The user has never been saved : insert it
+            $userData['NEW_USER'] = 1;
             $this->getDb()->insert('LIVRET_PERSONNEL', $userData);
             // Get the id of the newly created user and set it on the entity.
             $id = $this->getDb()->lastInsertId();
@@ -148,8 +151,8 @@ class UserDAO extends DAO implements UserProviderInterface
         // Convert query result to an array of domain objects
         $teachers = array();
         foreach ($result as $row) {
-            $id = $row['ID_LIV_PERS']." - ".$row['NOM'];
-            $teachers[$id] = $this->buildDomainObject($row);
+            $id = $row['ID_LIV_PERS']." - ".$row['NOM'] ." - ".$row['PRENOM'] ;
+            $teachers[$id] = $this->buildDomainObject2($row);
         }
         return $teachers;
     }
@@ -161,7 +164,7 @@ class UserDAO extends DAO implements UserProviderInterface
         $teachers = array();
         foreach ($result as $row) {
             $id = $row['ID_LIV_PERS']." - ".$row['NOM'];
-            $teachers[$id] = $this->buildDomainObject($row);
+            $teachers[$id] = $this->buildDomainObject2($row);
         }
         return $teachers;
     }
@@ -172,7 +175,7 @@ class UserDAO extends DAO implements UserProviderInterface
      * @param array $row The DB row containing User data.
      * @return \MicroCMS\Domain\User
      */
-    protected function buildDomainObject(array $row) {
+    protected function buildDomainObject2(array $row) {
         $user = new User();
         $user->setId($row['ID_LIV_PERS']);
         $user->setUsername($row['USR_NAME']);
@@ -187,4 +190,19 @@ class UserDAO extends DAO implements UserProviderInterface
         return $user;
     }
     
+       protected function buildDomainObject(array $row) {
+        $user = new User();
+        $user->setId($row['ID_LIV_PERS']);
+        $user->setUsername($row['USR_NAME']);
+        $user->setPassword($row['USR_PASSWORD']);
+        $user->setSalt($row['USR_SALT']);
+        $user->setRole($row['USR_ROLE']);
+        $user->setNom($row['NOM']);
+        $user->setPrenom($row['PRENOM']);
+        $user->setEmail($row['EMAIL']);
+        $user->setNumHarpege($row['NUM_HARPEGE']);
+        $user->setNewUser($row['NEW_USER']);
+        
+        return $user;
+    }
 }

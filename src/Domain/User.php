@@ -74,8 +74,19 @@ class User implements UserInterface
      */
     private $numHarpege;
     
+                /**
+     * New user.
+     * Values : int.
+     *
+     * @var string
+     */
+    private $newUser;
+    
     function getId() {
         return $this->id;
+    }
+        function getNewUser() {
+        return $this->newUser;
     }
 
     function getUsername() {
@@ -124,6 +135,10 @@ class User implements UserInterface
 
     function setSalt($salt) {
         $this->salt = $salt;
+    }
+
+        function setNewUser($newUser) {
+        $this->newUser = $newUser;
     }
 
     function setRole($role) {

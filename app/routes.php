@@ -4,8 +4,12 @@ use GestionnaireLivret\Domain\Cours;
 use GestionnaireLivret\Domain\User;
 
 use GestionnaireLivret\Domain\PresentationEc;
+use GestionnaireLivret\Form\Type\PasswordTypea;
 use GestionnaireLivret\Form\Type\UserType;
 use GestionnaireLivret\Form\Type\PresentationEcType;
+
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
 
 // Add a user
 $app->match('/admin/user/add', function(Request $request) use ($app) {
@@ -44,6 +48,9 @@ $app->match('/admin/user/add', function(Request $request) use ($app) {
         'userForm' => $userForm->createView()));
 })->bind('admin_user_add');
 
+
+
+
 // Edit an existing user
 $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) {
     $user = $app['dao.user']->find($id);
@@ -77,6 +84,43 @@ $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) 
         'userForm' => $userForm->createView()));
 })->bind('admin_user_edit');
 
+
+
+
+// Edit an existing user
+$app->match('/user/{id}/editPassword', function($id, Request $request) use ($app) {
+    $user = $app['dao.user']->find($id);
+    $teacher = $app['dao.user']->getEditTeacher($id);
+    $userForm = $app['form.factory']->create(PasswordTypea::class, $user, array('teacher_choices' => $teacher));
+    $userForm->handleRequest($request);
+    
+    if ($userForm->isSubmitted() && $userForm->isValid()) {
+        $teacherID = $user->getId()->getId();
+        $teacherNumHarpege = $user->getId()->getNumHarpege();
+        $teacherEmail = $user->getId()->getEmail();
+        $teacherName = $user->getId()->getNom();
+        $teacherFirstName = $user->getId()->getPrenom();
+        //Update user informations
+        $user->setId($teacherID);
+        $user->setNumHarpege($teacherNumHarpege);
+        $user->setEmail($teacherEmail);
+        $user->setNom($teacherName);
+        $user->setPrenom($teacherFirstName);
+        $plainPassword = $user->getPassword();
+        // find the encoder for the user
+        $encoder = $app['security.encoder_factory']->getEncoder($user);
+        // compute the encoded password
+        $password = $encoder->encodePassword($plainPassword, $user->getSalt());
+        $user->setPassword($password); 
+        $app['dao.user']->save($user);
+        $app['session']->getFlashBag()->add('success', 'The user was successfully updated.');
+    }
+    return $app['twig']->render('password_form.html.twig', array(
+        'title' => 'Edit user',
+        'userForm' => $userForm->createView()));
+})->bind('editPassword');
+
+
 // Remove a user
 $app->get('/admin/user/{id}/delete', function($id, Request $request) use ($app) {
     // Delete the user
@@ -93,6 +137,7 @@ $app->get('/login', function(Request $request) use ($app) {
         'last_username' => $app['session']->get('_security.last_username'),
     ));
 })->bind('login');
+
 
 $app->match('/cours/{id}', function ($id, Request $request) use ($app) {
     $cours = $app['dao.cours']->find($id);
@@ -186,6 +231,22 @@ $app->get('/parcours', function () use ($app) {
         return $app['twig']->render('parcours.html.twig' ,array('parcoursList' =>$listParcours));
     
 })->bind('parcours');
+
+$app->get('/verifNewUser', function () use ($app) {
+  $str = $app['user']->getNewUser();
+  $id =  $app['user']->getId();
+  if( $str  != 1 ){
+     return $app->redirect('http://localhost:8085/PSI/web/index.php/cours');
+  }
+  else{
+       return $app->redirect('http://localhost:8085/PSI/web/index.php/user/'.$id.'/editPassword');
+  }
+    
+       
+    
+})->bind('verifNewUser');
+
+
 $app->get('/generatePDF/{id}', function ($id) use ($app) {
  
     shell_exec('sudo wkhtmltopdf http://localhost/PSI/web/index.php/livret/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
