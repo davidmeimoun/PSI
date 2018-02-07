@@ -2,12 +2,15 @@
 use Symfony\Component\HttpFoundation\Request;
 use GestionnaireLivret\Domain\Cours;
 use GestionnaireLivret\Domain\User;
-
+use GestionnaireLivret\Domain\Livret;
 use GestionnaireLivret\Domain\PresentationEc;
 use GestionnaireLivret\Form\Type\PasswordTypea;
 use GestionnaireLivret\Form\Type\UserType;
 use GestionnaireLivret\Form\Type\PresentationEcType;
-
+use GestionnaireLivret\Form\Type\EditLivretType;
+use GestionnaireLivret\Domain\Organigramme;
+use GestionnaireLivret\Domain\ModulesEnseignement;
+use GestionnaireLivret\Domain\ModalitesControle;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
@@ -317,3 +320,94 @@ $app->get('/livret/{id}', function ($id) use ($app) {
        return $app['twig']->render('livret.html.twig' ,array('mention'=>$mention, 'ueList' =>$listUe, 'parcours' => $id, 'organigramme'=>$organigramme, 'presentationForm'=>$presentationForm, 'charte'=>$charte,'modalites'=>$modalites,'stages'=>$stages,'modules'=>$modules, 'calendrier'=>$calendrier));
    
 })->bind('livret');
+
+// Modification du contenu d'un livret (Admin)
+$app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
+    
+   // On récupère la mention
+   $mention = $app['dao.livret']->findMention($id);
+   
+   // On récupère le calendrier
+   $calendrier = $app['dao.livret']->findCalendrier($id);
+   // On récupère l'organigramme
+   $organigramme = $app['dao.organigramme']->find($id);
+   
+   
+   // On récupère la présentation de l'UE
+   $presentationForm = $app['dao.livret']->findPresentation($id);
+   
+   // On récupère la charte du vivre ensemble
+   $charte = $app['dao.livret']->findCharte();
+   
+   // On récupère les modalités de controle
+   $modalites = $app['dao.livret']->findModalitesControle($id);
+ 
+   // On récupère les stages
+   $stages = $app['dao.livret']->findStages($id);
+   
+   // On récupère les modules enseignements
+   $modules = $app['dao.livret']->findModulesEnseignement($id);
+   
+   // On récupère les UE et EC d'un parcours
+   $listUe = $app['dao.ue']->findByParcours($id);
+   $ec = array();
+   foreach($listUe as $ue)
+   {
+       $ec = $app['dao.cours']->findByUE($ue->getId());
+           foreach($ec as $e){
+               $presentation = $app['dao.presentationEc']->findByEC($e->getId_ligne());
+               $e -> setPresentation($presentation);
+           }
+      $ue->setEc($ec);
+   }
+   
+    $livret = new Livret();
+    $livretForm = $app['form.factory']->create(EditLivretType::class, $livret, ['calendrier' => $calendrier, 
+        'ufr' =>$organigramme->getUfr(),'departement' =>$organigramme->getDepartement(),
+        'presentation' => $presentationForm,'maquette' => $mention,
+        'modules_transversaux' => $modules->getModules_transversaux(), 'langues_vivantes' => $modules->getLangues_vivantes(),
+        'bonus_diplomes' => $modules->getBonus_diplomes(),'stage' => $stages,
+        'modalites_generales' => $modalites->getModalites_generales(),'modalites_specifiques' => $modalites->getModalites_specifiques(),
+        'particularite_validation' => $modalites->getParticularite_validation(),'deroulement_charte_examens' => $modalites->getDeroulement_charte_examens(),
+        'delivrance_diplome' => $modalites->getDelivrance_diplome(), 
+        'charte' => $charte]);
+    $livretForm->handleRequest($request);
+    
+    if ($livretForm->isSubmitted() && $livretForm->isValid()) {
+        $organigramme = new Organigramme();
+        $modulesEnseignement = new ModulesEnseignement();
+        $modalitesControle = new ModalitesControle();
+        // Build domain object Livret for persistance
+        $livret->setCalendrier($livretForm['calendrier']->getData());
+        //Object Organigramme
+        $organigramme->setFid_dip($id);
+        $organigramme->setDepartement($livretForm['departement']->getData());
+        $organigramme->setUfr($livretForm['ufr']->getData());
+        $livret->setOrganigramme($organigramme);
+        $livret->setPresentation($livretForm['presentation']->getData());
+        //Object ModulesEnseignement
+        $modulesEnseignement->setFid_dip($id);
+        $modulesEnseignement->setModules_transversaux($livretForm['modules_transversaux']->getData());
+        $modulesEnseignement->setBonus_diplomes($livretForm['bonus_diplomes']->getData());
+        $modulesEnseignement->setLangues_vivantes($livretForm['langues_vivantes']->getData());
+        
+        $livret->setModules_enseignement($modulesEnseignement);
+        $livret->setStage($livretForm['stage']->getData());
+        //Objectt ModalitesControle
+        $modalitesControle->setFid_dip($id);
+        $modalitesControle->setModalites_generales($livretForm['modalites_generales']->getData());
+        $modalitesControle->setModalites_specifiques($livretForm['modalites_specifiques']->getData());
+        $modalitesControle->setParticularite_validation($livretForm['particularite_validation']->getData());
+        $modalitesControle->setDeroulement_charte_examens($livretForm['deroulement_charte_examens']->getData());
+        $modalitesControle->setDelivrance_diplome($livretForm['delivrance_diplome']->getData());
+        
+        $livret->setModalites_examens($modalitesControle);
+        $livret->setCharte($livretForm['charte']->getData());
+        
+        $app['dao.livret']->save($livret);
+        $app['session']->getFlashBag()->add('success', 'The informations was successfully saved.');
+    }
+            
+    return $app['twig']->render('EditLivret.html.twig', array('livretForm' => $livretForm->createView()));
+
+})->bind('editLivret');

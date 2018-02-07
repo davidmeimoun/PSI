@@ -1,0 +1,175 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+{% for flashMessage in app.session.flashbag.get('success') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+
+<div class="well">
+{{ form_start(livretForm, { 'attr': {'class': 'form-horizontal'} }) }}
+
+    <div class="form-group">
+        {{ form_label(livretForm.calendrier, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.calendrier) }}
+            {{ form_widget(livretForm.calendrier, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.ufr, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.ufr) }}
+            {{ form_widget(livretForm.ufr, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.departement, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.departement) }}
+            {{ form_widget(livretForm.departement, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.presentation, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.presentation) }}
+            {{ form_widget(livretForm.presentation, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.modules_transversaux, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.modules_transversaux) }}
+            {{ form_widget(livretForm.modules_transversaux, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.langues_vivantes, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.langues_vivantes) }}
+            {{ form_widget(livretForm.langues_vivantes, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.bonus_diplomes, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.bonus_diplomes) }}
+            {{ form_widget(livretForm.bonus_diplomes, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.stage, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.stage) }}
+            {{ form_widget(livretForm.stage, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+            <div class="form-group">
+        {{ form_label(livretForm.modalites_generales, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.modalites_generales) }}
+            {{ form_widget(livretForm.modalites_generales, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+            <div class="form-group">
+        {{ form_label(livretForm.modalites_specifiques, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.modalites_specifiques) }}
+            {{ form_widget(livretForm.modalites_specifiques, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+            <div class="form-group">
+        {{ form_label(livretForm.particularite_validation, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.particularite_validation) }}
+            {{ form_widget(livretForm.particularite_validation, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+            <div class="form-group">
+        {{ form_label(livretForm.deroulement_charte_examens, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.deroulement_charte_examens) }}
+            {{ form_widget(livretForm.deroulement_charte_examens, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+            <div class="form-group">
+        {{ form_label(livretForm.delivrance_diplome, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.delivrance_diplome) }}
+            {{ form_widget(livretForm.delivrance_diplome, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(livretForm.charte, null, { 'label_attr':  {
+            'class': 'col-sm-5 control-label'
+        }}) }}
+        <div class="col-sm-4">
+            {{ form_errors(livretForm.charte) }}
+            {{ form_widget(livretForm.charte, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-sm-offset-5 col-sm-3">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+    </div>
+{{ form_end(livretForm) }}
+
+{% endblock %}

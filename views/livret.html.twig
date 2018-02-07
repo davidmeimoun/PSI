@@ -3,6 +3,12 @@
 <!-- ******************* PAGE DE PRESENTATION ******************** -->
 <!--<div  style='width: 990px; height: 842pt; background-image: url({{ asset('/assets/img/livret.png')}}' >
 </div>-->
+<div class="col-sm-offset-5 col-sm-3">
+    <a href="{{ path('editLivret', {'id':parcours}) }}">
+        <i class="material-icons">content_paste</i>
+            <input type="button" class="btn btn-primary" value="Modifier le contenu" />
+    </a>
+</div>
 <img src="{{ asset('/assets/img/livret.png')}}"/>
 <h1> {{mention}}</h1>
 <!-- ******************* CALENDRIER UNIVERSITAIRE ******************** -->
