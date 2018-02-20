@@ -1,11 +1,11 @@
 <?php
 namespace GestionnaireLivret\DAO;
-use Doctrine\DBAL\Connection;
+
 use GestionnaireLivret\Domain\Livret;
 use GestionnaireLivret\Domain\ModalitesControle;
 use GestionnaireLivret\Domain\ModulesEnseignement;
 
-class LivretDAO extends DAO{
+class LivretDAO extends DAO {
    
      
 public function findMention($id) {
@@ -94,6 +94,47 @@ public function findMention($id) {
            //throw new \Exception("No presentation matching id " . $id);
        }  
    }
+   
+       public function save(Livret $livret) {
+         $CalendrierData = array(
+            'descriptif' => $livret->getCalendrier(),
+            );
+         
+         $PresentationData = array(
+            'descriptif' => $livret->getPresentation(),
+            );
+         
+         $charteData = array(
+            'descriptif' => $livret->getCharte(),
+            );
+         
+         $modalitesEnseignementData = array(
+            'MODULES_TRANSVERSAUX' => $livret->getModules_enseignement()->getModules_transversaux(),
+            'LANGUES_VIVANTES' => $livret->getModules_enseignement()->getLangues_vivantes(),
+            'BONUS_DIPLOMES' => $livret->getModules_enseignement()->getBonus_diplomes(),
+            );
+  
+          $modalitesControleData = array(
+           'MODALITES_GENERALES' => $livret->getModalites_examens()->getModalites_generales(),
+           'MODALITES_SPECIFIQUES'=> $livret->getModalites_examens()->getModalites_specifiques(),
+           'PARTICULARITE_VALIDATION'=> $livret->getModalites_examens()->getParticularite_validation(),
+           'DEROULEMENT_CHARTE_EXAMENS'=> $livret->getModalites_examens()->getDeroulement_charte_examens(),
+           'DELIVRANCE_DIPLOME'=> $livret->getModalites_examens()->getDelivrance_diplome(),
+            );
+         
+           $stageData = array(
+            'descriptif' => $livret->getStage(),
+            );
+        
+        $this->getDb()->update('CALENDRIER_UNIVERSITAIRE', $CalendrierData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
+        $this->getDb()->update('PRESENTATION_FORMATION', $PresentationData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
+        $this->getDb()->update('CHARTE_VIVRE_ENSEMBLE', $charteData, array('FID_DIP' => 1));
+        $this->getDb()->update('MODULES_ENSEIGNEMENT', $modalitesEnseignementData, array('FID_DIP' => $livret->getModules_enseignement()->getFid_dip()));
+        $this->getDb()->update('MODALITES_DE_CONTROLE', $modalitesControleData, array('FID_DIP' => $livret->getModalites_examens()->getFid_dip()));
+        $this->getDb()->update('STAGES', $stageData, array('FID_DIP' => $livret->getModalites_examens()->getFid_dip()));
+    }
+    
+   
      protected function buildDomainObject(array $row) {
        $livret= new Livret();
       return $livret;

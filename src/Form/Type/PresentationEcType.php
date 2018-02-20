@@ -43,52 +43,51 @@ class PresentationEcType extends AbstractType {
         $this->erasmus = $options['erasmus'];
          
         $builder
-//            ->add('fid_ec', \Symfony\Component\Form\Extension\Core\Type\HiddenType::class, array('data' => $this->fid_ec))
             ->add('objectifs', TextareaType::class, array(
                 'label' => 'Objectifs' ,
                 'data' => $this->objectifs,
-                'required' => true,
+                'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('competences', TextareaType::class, array(
                 'label' => 'Compétences' ,
                 'data' => $this->competences,
-                 'required' => true,
+                 'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('prerequis', TextareaType::class, array(
                 'label' => 'Pré-requis' ,
                 'data' => $this->prerequis,
-                 'required' => true,
+                 'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('plan_cours', TextareaType::class, array(
                 'label' => 'Approche pédagogique' ,
                 'data' => $this->plan_cours,
-                 'required' => true,
+                 'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('bibliographie', TextareaType::class, array(
                 'label' => 'Bibliographie' ,
                 'data' => $this->bibliographie,
-                'required' => true,
+                'required' => false,
             ))
                  ->add('cours_en_ligne', TextareaType::class, array(
                 'label' => 'Espace cours en ligne' ,
                 'data' => $this->cours_en_ligne,
-                 'required' => true,
+                 'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('modalite_controle', TextareaType::class, array(
                 'label' => 'Modalités de contôle' ,
                 'data' => $this->modalite_controle,
-                 'required' => true,
+                 'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('erasmus', TextareaType::class, array(
                 'label' => 'ERASMUS' ,
                 'data' => $this->erasmus,
-                'required' => true,
+                'required' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ));
     }
