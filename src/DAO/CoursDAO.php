@@ -33,6 +33,20 @@ public function findByTeacher($FID_PERS){
       }
       return $cours;
   }
+  
+  public function findByDiplome($id_dip){
+              $sql = 'select * from EC_UE_LISTEEC , EC, UE where FID_UE = ID_UE and FID_EC = ID_EC and UE.FID_DIP = ' .$id_dip .'';// order by ID_DIP desc
+      $result = $this->getDb()->fetchAll($sql);
+     
+      // Convert query result to an array of domain objects
+      $cours = array();
+      foreach ($result as $row) {
+          $coursId = $row['ID_EC'];
+          $cours[$coursId] = $this->buildDomainObject($row);
+      }
+      return $cours;
+  }
+   
    
 public function find($id) {
       $sql = "select * from EC where ID_EC=?";

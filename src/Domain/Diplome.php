@@ -18,7 +18,16 @@ class Diplome
      */
     private $libelleDiplome;
 
-
+    /**
+     * Diplome FID_MEN.
+     *
+     * @var string
+     */
+    private $fidMen;
+    
+    
+    
+    
 
     public function getId() {
         return $this->id;
@@ -37,5 +46,14 @@ class Diplome
         $this->libelleDiplome = $libelleDiplome;
         return $this;
     }
+
+    function getFidMen() {
+        return $this->fidMen;
+    }
+
+    function setFidMen($fidMen) {
+        $this->fidMen = $fidMen;
+    }
+
 
 }

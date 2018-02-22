@@ -29,7 +29,23 @@ class UeDAO extends DAO
         }
     }
     
-        public function findByParcours($parcours) {
+
+    
+        public function findByDiplomeEtSemestre($diplome, $semestre) {
+            $sql = 'select * from DIPLOME dip, UE ue,SEMESTRE_UE sem where dip.ID_DIP = ' .$diplome .' and dip.ID_DIP = ue.FID_DIP and ue.ID_UE = sem.FID_UE and sem.NUM_SEMESTRE = '.$semestre.'';
+    
+        $result = $this->getDb()->fetchAll($sql);
+        
+        // Convert query result to an array of domain objects
+        $ues = array();
+        foreach ($result as $row) {
+            $ueId = $row['ID_UE'];
+            $ues[$ueId] = $this->buildDomainObject($row);
+        }
+        return $ues;
+        }
+        
+                public function findByParcours($parcours) {
         $sql = 'select * from UE, SEMESTRE_UE S where S.FID_UE = UE.ID_UE and FID_PARCOURS=' .$parcours .'';
         $result = $this->getDb()->fetchAll($sql);
         

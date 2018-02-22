@@ -78,3 +78,11 @@ $app['dao.livret'] = function ($app) {
 $app['dao.organigramme'] = function ($app) {
    return new GestionnaireLivret\DAO\OrganigrammeDAO($app['db']);
 };
+
+$app['dao.mention'] = function ($app) {
+   return new GestionnaireLivret\DAO\MentionDAO($app['db']);
+};
+
+$app['dao.domaine'] = function ($app) {
+   return new GestionnaireLivret\DAO\DomaineDAO($app['db']);
+};
