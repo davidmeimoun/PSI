@@ -9,10 +9,10 @@ class LivretDAO extends DAO {
    
      
 public function findMention($id) {
-       $sql = "select mention_apo from APOGEE_LIAISON_PARCOURS where CODE_PARCOURS=?";
+       $sql = "select LIBELLE_MENTION from DIPLOME, MENTION where ID_MEN = FID_MEN and ID_DIP =?";
        $row = $this->getDb()->fetchAssoc($sql, array($id));
        if ($row) {
-           return $row['MENTION_APO'];
+           return $row['LIBELLE_MENTION'];
        } else {
           throw new \Exception("No presentation matching id " . $id);
        }  
@@ -24,7 +24,7 @@ public function findMention($id) {
        if ($row) {
            return $row['DESCRIPTIF'];
        } else {
-           //throw new \Exception("No presentation matching id " . $id);
+           return " ";
        }  
    }
        
@@ -34,7 +34,7 @@ public function findMention($id) {
        if ($row) {
            return $row['DESCRIPTIF'];
        } else {
-           //throw new \Exception("No presentation matching id " . $id);
+           return " ";
        }  
    }
    
@@ -44,7 +44,7 @@ public function findMention($id) {
        if ($row) {
            return $row['DESCRIPTIF'];
        } else {
-           //throw new \Exception("No charte matching id ");
+           return " ";
        }  
    }
    
@@ -52,8 +52,8 @@ public function findMention($id) {
        public function findModalitesControle($id) {
        $sql = "select * from MODALITES_DE_CONTROLE where FID_DIP=?";
        $row = $this->getDb()->fetchAssoc($sql, array($id));
+       $modalites = new ModalitesControle();
        if ($row) {
-           $modalites = new ModalitesControle();
            $modalites->setFid_dip($row['FID_DIP']);
            $modalites->setModalites_generales($row['MODALITES_GENERALES']);
            $modalites->setModalites_specifiques($row['MODALITES_SPECIFIQUES']);
@@ -63,7 +63,13 @@ public function findMention($id) {
 
            return $modalites;
        } else {
-           //throw new \Exception("No presentation matching id " . $id);
+           $modalites->setFid_dip($id);
+           $modalites->setModalites_generales(" ");
+           $modalites->setModalites_specifiques(" ");
+           $modalites->setParticularite_validation(" ");
+           $modalites->setDeroulement_charte_examens(" ");
+           $modalites->setDelivrance_diplome(" ");
+           return $modalites;
        }  
    }
    
@@ -74,7 +80,7 @@ public function findMention($id) {
        if ($row) {
            return $row['DESCRIPTIF'];
        } else {
-           //throw new \Exception("No presentation matching id " . $id);
+           return " ";
        }  
    }
    
@@ -82,8 +88,8 @@ public function findMention($id) {
        public function findModulesEnseignement($id) {
        $sql = "select * from MODULES_ENSEIGNEMENT where FID_DIP=?";
        $row = $this->getDb()->fetchAssoc($sql, array($id));
+       $modules = new ModulesEnseignement();
        if ($row) {
-           $modules = new ModulesEnseignement();
            $modules->setFid_dip($row['FID_DIP']);
            $modules->setModules_transversaux($row['MODULES_TRANSVERSAUX']);
            $modules->setLangues_vivantes($row['LANGUES_VIVANTES']);
@@ -91,16 +97,22 @@ public function findMention($id) {
 
            return $modules;
        } else {
-           //throw new \Exception("No presentation matching id " . $id);
+           $modules->setFid_dip($id);
+           $modules->setModules_transversaux(" ");
+           $modules->setLangues_vivantes(" ");
+           $modules->setBonus_diplomes(" ");
+           return $modules;
        }  
    }
    
        public function save(Livret $livret) {
          $CalendrierData = array(
+             'FID_DIP' => $livret->getOrganigramme()->getFid_dip(),
             'descriptif' => $livret->getCalendrier(),
             );
          
          $PresentationData = array(
+            'FID_DIP' => $livret->getOrganigramme()->getFid_dip(),
             'descriptif' => $livret->getPresentation(),
             );
          
@@ -109,12 +121,14 @@ public function findMention($id) {
             );
          
          $modalitesEnseignementData = array(
+            'FID_DIP' => $livret->getModules_enseignement()->getFid_dip(),
             'MODULES_TRANSVERSAUX' => $livret->getModules_enseignement()->getModules_transversaux(),
             'LANGUES_VIVANTES' => $livret->getModules_enseignement()->getLangues_vivantes(),
             'BONUS_DIPLOMES' => $livret->getModules_enseignement()->getBonus_diplomes(),
             );
   
           $modalitesControleData = array(
+           'FID_DIP' => $livret->getModalites_examens()->getFid_dip(),
            'MODALITES_GENERALES' => $livret->getModalites_examens()->getModalites_generales(),
            'MODALITES_SPECIFIQUES'=> $livret->getModalites_examens()->getModalites_specifiques(),
            'PARTICULARITE_VALIDATION'=> $livret->getModalites_examens()->getParticularite_validation(),
@@ -123,17 +137,52 @@ public function findMention($id) {
             );
          
            $stageData = array(
+            'FID_DIP' => $livret->getModalites_examens()->getFid_dip(),
             'descriptif' => $livret->getStage(),
             );
+           
+        if($this->isExistingInDB($livret->getOrganigramme()->getFid_dip(), 'CALENDRIER_UNIVERSITAIRE')){
+            $this->getDb()->update('CALENDRIER_UNIVERSITAIRE', $CalendrierData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
+        } else {
+            $this->getDb()->insert('CALENDRIER_UNIVERSITAIRE', $CalendrierData);
+        }
+           if($this->isExistingInDB($livret->getOrganigramme()->getFid_dip(), 'PRESENTATION_FORMATION')){
+            $this->getDb()->update('PRESENTATION_FORMATION', $PresentationData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
+        } else {
+            $this->getDb()->insert('PRESENTATION_FORMATION', $PresentationData);
+        }
+           if($this->isExistingInDB(1, 'CHARTE_VIVRE_ENSEMBLE')){
+            $this->getDb()->update('CHARTE_VIVRE_ENSEMBLE', $charteData, array('FID_DIP' => 1));
+        } else {
+            $this->getDb()->insert('CHARTE_VIVRE_ENSEMBLE', $charteData);
+        }
+           if($this->isExistingInDB($livret->getModules_enseignement()->getFid_dip(), 'MODULES_ENSEIGNEMENT')){
+            $this->getDb()->update('MODULES_ENSEIGNEMENT', $modalitesEnseignementData, array('FID_DIP' => $livret->getModules_enseignement()->getFid_dip()));
+        } else {
+            $this->getDb()->insert('MODULES_ENSEIGNEMENT', $modalitesEnseignementData);
+        }
+           if($this->isExistingInDB($livret->getModalites_examens()->getFid_dip(), 'MODALITES_DE_CONTROLE')){
+            $this->getDb()->update('MODALITES_DE_CONTROLE', $modalitesControleData, array('FID_DIP' => $livret->getModalites_examens()->getFid_dip()));
+        } else {
+            $this->getDb()->insert('MODALITES_DE_CONTROLE', $modalitesControleData);
+        }
+           if($this->isExistingInDB($livret->getModalites_examens()->getFid_dip(), 'STAGES')){
+            $this->getDb()->update('STAGES', $stageData, array('FID_DIP' => $livret->getModalites_examens()->getFid_dip()));
+        } else {
+            $this->getDb()->insert('STAGES', $stageData);
+        }
         
-        $this->getDb()->update('CALENDRIER_UNIVERSITAIRE', $CalendrierData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
-        $this->getDb()->update('PRESENTATION_FORMATION', $PresentationData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
-        $this->getDb()->update('CHARTE_VIVRE_ENSEMBLE', $charteData, array('FID_DIP' => 1));
-        $this->getDb()->update('MODULES_ENSEIGNEMENT', $modalitesEnseignementData, array('FID_DIP' => $livret->getModules_enseignement()->getFid_dip()));
-        $this->getDb()->update('MODALITES_DE_CONTROLE', $modalitesControleData, array('FID_DIP' => $livret->getModalites_examens()->getFid_dip()));
-        $this->getDb()->update('STAGES', $stageData, array('FID_DIP' => $livret->getModalites_examens()->getFid_dip()));
     }
     
+    public function isExistingInDB($id, $db_name) {
+        $req = "select * from $db_name where FID_DIP = ".$id;
+        $result = $this->getDb()->executeQuery($req); 
+        if($result->fetch() == null){
+            return FALSE;
+        }else{
+            return TRUE;
+        }
+    }
    
      protected function buildDomainObject(array $row) {
        $livret= new Livret();
