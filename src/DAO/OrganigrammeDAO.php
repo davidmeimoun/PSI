@@ -29,7 +29,12 @@ class OrganigrammeDAO extends DAO
       if ($row) {
           return $this->buildDomainObject($row);
       } else {
-          //throw new \Exception("No organigramme universitaire matching id " . $id);
+        $organigramme= new Organigramme();
+        $organigramme->setFid_dip($id);
+        $organigramme->setDepartement(" ");
+        $organigramme->setUfr(" ");
+        $organigramme->setUniversite(" ");
+        return $organigramme;
       }
   }
 
