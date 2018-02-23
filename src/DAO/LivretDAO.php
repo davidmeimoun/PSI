@@ -174,8 +174,8 @@ public function findMention($id) {
         
     }
     
-    public function isExistingInDB($id, $db_name) {
-        $req = "select * from $db_name where FID_DIP = ".$id;
+    public function isExistingInDB($fid_dip, $db_name) {
+        $req = "select * from $db_name where FID_DIP = ".$fid_dip;
         $result = $this->getDb()->executeQuery($req); 
         if($result->fetch() == null){
             return FALSE;
