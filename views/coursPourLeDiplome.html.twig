@@ -30,27 +30,30 @@
                                         <div class="tab-pane active" id="profile">
                                             <table class="table">
                                                 <tbody>
-                                                      {% for cours in coursList %}
+  {% for semestre in listSemestre %}   
+  <ul>
+  <li>Semestre {{ semestre.numSemestre }}</li>
+  {% for ue in semestre.ue %}
+        <ul>
+        <li>{{ue.libelle}}</li>
+                {% for cours in ue.ec %}
+                   <ul> 
+                        <a class="coursTitle" href="{{ path('coursDetail', { 'id': cours.id_ligne }) }}">{{ cours.libelle }}</a>
+                   </ul>
+        
+                {% endfor %}
+  </ul>
+  {% endfor %}
+  </ul>
+    {% endfor %}
+    
+  
 
-       <cours>
                                                     <tr>
-                                                        <td>
-                                                            <div class="checkbox">
-                                                                <label>
-                                                                    <input type="checkbox" name="optionsCheckboxes" checked>
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td>        <cours>
-            
-            <a class="coursTitle" href="{{ path('coursDetail', { 'id': cours.id_ligne }) }}">{{ cours.libelle }}</a>
-        </td>
-                                                       
-                                                
-                                                    </tr>
-                                                                                                    </cours>
 
-                                                     {% endfor %}
+                                                        <td>       
+
+                                                 
                                                 </tbody>
                                             </table>
                                         </div>

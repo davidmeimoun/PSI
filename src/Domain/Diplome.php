@@ -25,8 +25,17 @@ class Diplome
      */
     private $fidMen;
     
+    private  $semestre = array();
     
-    
+    function getSemestre() {
+        return $this->semestre;
+    }
+
+    function setSemestre(Semestre $semestre) {
+        $this->semestre = $semestre;
+    }
+
+        
     
 
     public function getId() {
