@@ -7,6 +7,7 @@ use GestionnaireLivret\Domain\Organigramme;
 use GestionnaireLivret\Domain\ModulesEnseignement;
 use GestionnaireLivret\Domain\ModalitesControle;
 use GestionnaireLivret\Domain\Domaine;
+use GestionnaireLivret\Domain\Semestre;
 
 use GestionnaireLivret\Domain\PresentationEc;
 use GestionnaireLivret\Form\Type\PasswordTypea;
@@ -238,25 +239,47 @@ $app->get('/parcours', function () use ($app) {
     
 })->bind('parcours');
 
-$app->get('/domaine', function () use ($app) {
+$app->get('/admin/domaine', function () use ($app) {
   
     $listDomaine = $app['dao.domaine']->findAll();     
         return $app['twig']->render('domaine.html.twig' ,array('domaineList' =>$listDomaine));
     
 })->bind('domaine');
 
-$app->get('/mention/{id}', function ($id) use ($app) {
+$app->get('/admin/mention/{id}', function ($id) use ($app) {
 
     $listMention = $app['dao.mention']->findByDomaine($id);     
         return $app['twig']->render('mention.html.twig' ,array('mentionList' =>$listMention));
     
 })->bind('mention');
 
-$app->get('/coursPourLeDiplome/{id}', function ($id) use ($app) {
+$app->get('/admin/coursPourLeDiplome/{id}', function ($id) use ($app) {
     $nombreDeSemestre = $app['dao.diplome']->nombreDeSemestreDuDiplome($id);
+    $listSemestre = array();
     
-    $listCours =  $app['dao.cours']->findByDiplome($id);    
-        return $app['twig']->render('coursPourLeDiplome.html.twig' ,array('coursList' =>$listCours));
+         for($i = 1; $i <= $nombreDeSemestre; $i ++){
+             $semestre = new Semestre();
+             $semestre->setNumSemestre($i);
+             
+       // On récupère les UE et EC d'un parcours
+   $listUe = $app['dao.ue']->findByDiplomeEtSemestre($id,$i);
+   $ec = array();
+   foreach($listUe as $ue)
+   {
+       $ec = $app['dao.cours']->findByUE($ue->getId());
+           foreach($ec as $e){
+               $presentation = $app['dao.presentationEc']->findByEC($e->getId_ligne());
+               $e -> setPresentation($presentation);
+           }
+      $ue->setEc($ec);
+   }
+   $semestre->setUE($listUe);
+   array_push($listSemestre, $semestre);
+       }
+       
+   
+    
+        return $app['twig']->render('coursPourLeDiplome.html.twig' ,array('listSemestre' =>$listSemestre));
     
 })->bind('coursPourLeDiplome');
 

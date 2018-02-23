@@ -38,9 +38,12 @@ class UeDAO extends DAO
         
         // Convert query result to an array of domain objects
         $ues = array();
+        $i = 0;
         foreach ($result as $row) {
+            
             $ueId = $row['ID_UE'];
-            $ues[$ueId] = $this->buildDomainObject($row);
+            $ues[$i] = $this->buildDomainObject($row);
+            $i++;
         }
         return $ues;
         }
