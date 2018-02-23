@@ -26,7 +26,18 @@ class Semestre
     
     private  $ue;
     
-    function getNumSemestre() {
+    private $diplome;
+    
+    
+    function getDiplome() {
+        return $this->diplome;
+    }
+
+    function setDiplome($diplome) {
+        $this->diplome = $diplome;
+    }
+
+        function getNumSemestre() {
         return $this->numSemestre;
     }
 

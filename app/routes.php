@@ -249,6 +249,7 @@ $app->get('/admin/mention/{id}', function ($id) use ($app) {
 })->bind('mention');
 
 $app->get('/admin/coursPourLeDiplome/{id}', function ($id) use ($app) {
+    $nomDiplome = $app['dao.diplome']->find($id);
     $nombreDeSemestre = $app['dao.diplome']->nombreDeSemestreDuDiplome($id);
     $listSemestre = array();
     
@@ -269,12 +270,13 @@ $app->get('/admin/coursPourLeDiplome/{id}', function ($id) use ($app) {
       $ue->setEc($ec);
    }
    $semestre->setUE($listUe);
+   $semestre->setDiplome($id);
    array_push($listSemestre, $semestre);
        }
        
    
     
-        return $app['twig']->render('coursPourLeDiplome.html.twig' ,array('listSemestre' =>$listSemestre));
+        return $app['twig']->render('coursPourLeDiplome.html.twig' ,array('listSemestre' =>$listSemestre,'nomDiplome' => $nomDiplome));
     
 })->bind('coursPourLeDiplome');
 
@@ -283,6 +285,7 @@ $app->get('/diplome/{id}', function ($id) use ($app) {
         return $app['twig']->render('diplome.html.twig' ,array('diplomeList' =>$listDiplome));
     
 })->bind('diplome');
+
 
 $app->get('/verifNewUser', function () use ($app) {
   $str = $app['user']->getNewUser();
@@ -369,3 +372,6 @@ $app->get('/livret/{id}', function ($id) use ($app) {
        return $app['twig']->render('livret.html.twig' ,array('mention'=>$mention, 'ueList' =>$listUe, 'parcours' => $id, 'organigramme'=>$organigramme, 'presentationForm'=>$presentationForm, 'charte'=>$charte,'modalites'=>$modalites,'stages'=>$stages,'modules'=>$modules, 'calendrier'=>$calendrier));
    
 })->bind('livret');
+$app->get('/editLivret/{id}', function ($id) use ($app) {
+   
+})->bind('editLivret');

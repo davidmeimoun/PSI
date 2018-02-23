@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-
+{{nomDiplome.libelleDiplome}}
               <div class="container-fluid">
    
         
@@ -16,11 +16,15 @@
                                             <span class="nav-tabs-title"></span>
                                           <ul class="nav nav-tabs" data-tabs="tabs">
                                                 <li class="active">
-                                                    <a href="#profile" data-toggle="tab">
-                                                        <i class="material-icons">bug_report</i> UFR SEGMI
+                                                          {% for semestre in listSemestre %}   {% if loop.first %}      <a href="{{ path('generatePDF', { 'id': semestre.diplome }) }}"> Telecharger Livret</a>{% endif %}         {% endfor %}
                                                         <div class="ripple-container"></div>
-                                                    </a>
+                                                    
                                                 </li>
+                                                <li>
+                                                       {% for semestre in listSemestre %}   {% if loop.first %}      <a href="{{ path('editLivret', { 'id': semestre.diplome }) }}">  Modifier le contenu</a>{% endif %}         {% endfor %}
+                                               
+                                                </li>
+                                                 
                                           </ul>
                                         </div>
                                     </div>
