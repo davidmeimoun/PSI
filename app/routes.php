@@ -344,7 +344,8 @@ $app->get('/livret/{id}', function ($id) use ($app) {
    $calendrier = $app['dao.livret']->findCalendrier($id);
    // On récupère l'organigramme
    $organigramme = $app['dao.organigramme']->find($id);
-   
+       //On récupère les services numériques
+   $servicesNum = $app['dao.livret']->findServicesNumeriques($id);
    
    // On récupère la présentation de l'UE
    $presentationForm = $app['dao.livret']->findPresentation($id);
@@ -361,8 +362,16 @@ $app->get('/livret/{id}', function ($id) use ($app) {
    // On récupère les modules enseignements
    $modules = $app['dao.livret']->findModulesEnseignement($id);
    
-   // On récupère les UE et EC d'un parcours
-   $listUe = $app['dao.ue']->findByParcours($id);
+   $nomDiplome = $app['dao.diplome']->find($id);
+    $nombreDeSemestre = $app['dao.diplome']->nombreDeSemestreDuDiplome($id);
+    $listSemestre = array();
+    
+         for($i = 1; $i <= $nombreDeSemestre; $i ++){
+             $semestre = new Semestre();
+             $semestre->setNumSemestre($i);
+             
+       // On récupère les UE et EC d'un parcours
+   $listUe = $app['dao.ue']->findByDiplomeEtSemestre($id,$i);
    $ec = array();
    foreach($listUe as $ue)
    {
@@ -373,8 +382,11 @@ $app->get('/livret/{id}', function ($id) use ($app) {
            }
       $ue->setEc($ec);
    }
-       
-       return $app['twig']->render('livret.html.twig' ,array('mention'=>$mention, 'ueList' =>$listUe, 'parcours' => $id, 'organigramme'=>$organigramme, 'presentationForm'=>$presentationForm, 'charte'=>$charte,'modalites'=>$modalites,'stages'=>$stages,'modules'=>$modules, 'calendrier'=>$calendrier));
+   $semestre->setUE($listUe);
+   $semestre->setDiplome($id);
+   array_push($listSemestre, $semestre);
+       }
+ return $app['twig']->render('livret.html.twig' ,array('listSemestre' =>$listSemestre,'nomDiplome' => $nomDiplome,'servicesNum'=> $servicesNum,'mention'=>$mention, 'parcours' => $id, 'organigramme'=>$organigramme, 'presentationForm'=>$presentationForm, 'charte'=>$charte,'modalites'=>$modalites,'stages'=>$stages,'modules'=>$modules, 'calendrier'=>$calendrier));
    
 })->bind('livret');
 

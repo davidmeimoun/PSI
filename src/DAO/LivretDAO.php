@@ -4,15 +4,16 @@ namespace GestionnaireLivret\DAO;
 use GestionnaireLivret\Domain\Livret;
 use GestionnaireLivret\Domain\ModalitesControle;
 use GestionnaireLivret\Domain\ModulesEnseignement;
+use GestionnaireLivret\Domain\ServicesNumeriques;
 
 class LivretDAO extends DAO {
    
      
 public function findMention($id) {
-       $sql = "select LIBELLE_MENTION from DIPLOME, MENTION where ID_MEN = FID_MEN and ID_DIP =?";
+       $sql = "select id_dip from DIPLOME where ID_DIP=?";
        $row = $this->getDb()->fetchAssoc($sql, array($id));
        if ($row) {
-           return $row['LIBELLE_MENTION'];
+           return $row['ID_DIP'];
        } else {
           throw new \Exception("No presentation matching id " . $id);
        }  
@@ -37,6 +38,23 @@ public function findMention($id) {
            return " ";
        }  
    }
+   
+                public function findServicesNumeriques($id) {
+           $sql = "select * from SERVICES_NUMERIQUES where FID_DIP=?";
+       $row = $this->getDb()->fetchAssoc($sql, array($id));
+       if ($row) {
+           $services = new ServicesNumeriques();
+           $services->setFid_dip($row['FID_DIP']);
+           $services->setEmail_universitaire($row['EMAIL_UNIVERSITAIRE']);
+           $services->setEnt($row['ENT']);
+  
+
+           return $services;
+       } else {
+           //throw new \Exception("No presentation matching id " . $id);
+       } 
+   }
+   
    
        public function findCharte() {
        $sql = "select descriptif from CHARTE_VIVRE_ENSEMBLE where FID_DIP=1";

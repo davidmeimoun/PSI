@@ -1,54 +1,71 @@
-{% extends "layout.html.twig" %}
+{% extends "layoutLivret.html.twig" %}
 {% block content %}
 <!-- ******************* PAGE DE PRESENTATION ******************** -->
-<!--<div  style='width: 990px; height: 842pt; background-image: url({{ asset('/assets/img/livret.png')}}' >
-</div>-->
-<div class="col-sm-offset-5 col-sm-3">
-    <a href="{{ path('editLivret', {'id':parcours}) }}">
-        <i class="material-icons">content_paste</i>
-            <input type="button" class="btn btn-primary" value="Modifier le contenu" />
-    </a>
-</div>
-<img src="{{ asset('/assets/img/livret.png')}}"/>
-<h1> {{mention}}</h1>
-<!-- ******************* CALENDRIER UNIVERSITAIRE ******************** -->
-<h1> Calendrier universitaire </h1>
-{%if calendrier is not empty %}
-    {{calendrier}}
-    {%endif%}
-<!-- ******************* ORGANIGRAMME ET CONTACTS ******************** -->
+<h2>{{nomDiplome.libelleDiplome}}</h2>
 
+
+    
+<div style="page-break-after:always;"></div>
+<!-- ******************* PRESENTATION DE LA FORMATION ******************** -->
+<h1> Présentation de la formation </h1>
+<hr/>
+{%if presentationForm is not empty %}
+    {{presentationForm| raw}}
+    {%endif%}
+<div style="page-break-after:always;"></div>
+<!-- ******************* ORGANIGRAMME ET CONTACTS ******************** -->
 <h1> Organigramme et Contact </h1>
+<hr/>
 {%if organigramme is not empty %}
     <Organigramme>
     <h3> UNIVERSITÉ </h3>
-    {{ organigramme.universite }}
+    {{ organigramme.universite| raw }}
     <h3> UFR </h3>
-    {{ organigramme.ufr }}
+    {{ organigramme.ufr| raw }}
     <h3> DÉPARTEMENT </h3>
-    {{ organigramme.departement }}
+    {{ organigramme.departement| raw }}
     </Organigramme>
     {%endif%}
-    
-<!-- ******************* PRESENTATION DE LA FORMATION ******************** -->
-<h1> Présentation de la formation </h1>
-{%if presentationForm is not empty %}
-    {{presentationForm}}
+<div style="page-break-after:always;"></div>
+
+<!-- ******************* SERVICES NUMERIQUES ******************** -->
+<h1>Services Numériques </h1>
+{%if servicesNum is not empty %}
+    <h3> Email universitaire </h3>
+    <ServicesNumeriques>
+    {{ servicesNum.email_universitaire| raw }}
+    <h3> Espace Numérique de Travail (ENT) </h3>
+    {{ servicesNum.ent| raw }}
+    </ServicesNumeriques>
+{%endif%}
+<div style="page-break-after:always;"></div>
+<!-- ******************* CALENDRIER UNIVERSITAIRE ******************** -->
+<h1> Calendrier universitaire </h1>
+<hr/>
+{%if calendrier is not empty %}
+    {{calendrier| raw}}
     {%endif%}
+
+   <div style="page-break-after:always;"></div> 
 
 <!-- ******************* MAQUETTE DU DIPLOME ******************** -->
   <h1> Maquette du parcours </h1>
+     
+ 
+    
+  <hr/>
+   {% for semestre in listSemestre %} 
     <table class="table-bordered table">
         <thead class="">
-            <th> Semestre </th>
+            <th> Semestre {{ semestre.numSemestre }}</th>
             <th> CM </th>
             <th> TD </th>
             <th> ECTS </th>  
         </thead>
-  {% for ue in ueList %}
+  {% for ue in semestre.ue %}
         <UE>
             <tr class="active">
-                <td>{{ ue.libelle }}</td>
+                <td>{{ ue.libelle | raw}}</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -56,34 +73,38 @@
           {% for cours in ue.ec %}
           <cours>
               <tr>
-              <td> {{ cours.libelle }}</td>
-              <td>{{ cours.h_cm}} </td>
-              <td>{{ cours.h_td }}</td>
-              <td>{{ cours.ects }}</td>
+              <td> {{ cours.libelle| raw }}</td>
+              <td>{{ cours.h_cm| raw}} </td>
+              <td>{{ cours.h_td | raw}}</td>
+              <td>{{ cours.ects | raw}}</td>
               </tr>
           {% endfor %}
            </cours>
         {% endfor %}
         
     </table>
+        <div style="page-break-after:always;"></div>
+        {% endfor %}
 
 <!-- ******************* PRESENTATION DES ENSEIGNEMENTS ******************** -->
 
 
 
 <h1> Présentation des enseignements </h1>
-    
-
-  {% for ue in ueList %}
+    <hr/>
+{% for semestre in listSemestre %} 
+    <h3> Semestre : {{semestre.numSemestre}}</h3>
+  {% for ue in semestre.ue %}
                 {% for cours in ue.ec %}
                                        <cours>
+                                           
               <table class="table-bordered table">
 
             <thead class="active">
-                <th>Code Ec :{{ cours.code }}</th>
-                <th>Intitulé EC :{{ cours.libelle }} </th>
-                <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td }}</th>
-                <th>Enseignant : {{ cours.nomEnseignant}}</th>
+                <th>Code Ec :{{ cours.code| raw }}</th>
+                <th>Intitulé EC :{{ cours.libelle | raw}} </th>
+                <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td | raw}}</th>
+                <th>Enseignant : {{ cours.nomEnseignant| raw}}</th>
             </thead>
 
 
@@ -92,7 +113,7 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Objectifs</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.objectifs}}{% endif %}
+    {%if not cours.presentation is empty %}{{cours.presentation.objectifs| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -100,7 +121,7 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Compétences</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.competences}}{% endif %}
+    {%if not cours.presentation is empty %}{{cours.presentation.competences| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -109,7 +130,7 @@
   
  <div class="form-group">
     <label for="exampleTextarea">Pré-requis</label>
-   {%if not cours.presentation is empty %}{{cours.presentation.prerequis}}{% endif %}
+   {%if not cours.presentation is empty %}{{cours.presentation.prerequis| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -117,7 +138,7 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Approche pédagogique</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.plan_cours}}{% endif %}
+    {%if not cours.presentation is empty %}{{cours.presentation.plan_cours| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -125,7 +146,7 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Bibliographie</label>
-   {%if not cours.presentation is empty %}{{cours.presentation.bibliographie}}{% endif %}
+   {%if not cours.presentation is empty %}{{cours.presentation.bibliographie| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -133,7 +154,7 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Espace cours en ligne</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne}}{% endif %}
+    {%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -141,7 +162,7 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Modalités de contôle</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.modalite_controle}}{% endif %}
+    {%if not cours.presentation is empty %}{{cours.presentation.modalite_controle| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
@@ -149,54 +170,65 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">ERASMUS</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.erasmus}}{% endif %}
+    {%if not cours.presentation is empty %}{{cours.presentation.erasmus| raw}}{% endif %}
   </div>
                     </td>
                 </tr>
                          
 </cours>
 </table>
+<div style="page-break-after:always;"></div>
+        {% endfor %}
         {% endfor %}
         {% endfor %}
    
    </form>
 
-
+<div style="page-break-after:always;"></div>
 <!-- ******************* MODULES ENSEIGNEMENT ******************** -->
 <h1> MODULES D'ENSEIGNEMENT TRANSVERSAUX / LANGUES VIVANTES / BONUS AU DIPLOME </h1>
+<hr/>
 {%if modules is not empty %}
     <h3> Modules transversaux </h3>
-    {{modules.modules_transversaux}}
+    {{modules.modules_transversaux| raw}}
      <h3> Langues vivantes </h3>
-    {{modules.langues_vivantes}}
-     <h3> Bonus diplômes </h3>
-    {{modules.bonus_diplomes}}
+    {{modules.langues_vivantes| raw}}
+    <h3> Bonus diplômes </h3>
+    {{modules.bonus_diplomes| raw}}
     {%endif%}
+<div style="page-break-after:always;"></div>
 <!-- ******************* STAGE ******************** -->
 <h1> STAGES </h1>
+<hr/>
 {%if stages is not empty %}
-    {{stages}}
+    {{stages| raw}}
     {%endif%}
+    <div style="page-break-after:always;"></div>
 <!-- ******************* MODALITÉS DE CONTRÔLE ET EXAMENS ******************** -->
 <h1>MODALITES DE CONTROLE ET EXAMENS</h1>
+<hr/>
 {%if modalites is not empty %}
-    {{modalites.descriptif}}
+    {{modalites.descriptif| raw}}
 <h3> Modalités générales </h3>
-{{modalites.modalites_generales}}
+{{modalites.modalites_generales| raw}}
 <h3> Modalités spécifiques </h3>
-{{modalites.modalites_specifiques}}
+{{modalites.modalites_specifiques| raw}}
 <h3> Particularités de validation </h3>
-{{modalites.particularite_validation}}
+{{modalites.particularite_validation| raw}}
 <h3> Déroulement et charte des examens </h3>
-{{modalites.deroulement_charte_examens}}
+{{modalites.deroulement_charte_examens| raw}}
 <h3> Délivrance du diplôme </h3>
-{{modalites.delivrance_diplome}}
+{{modalites.delivrance_diplome| raw}}
 
 {%endif%}
+<div style="page-break-after:always;"></div>
 <!-- ******************* CHARTE DU VIVRE ENSEMBLE ******************** -->
 <h1> CHARTE DU VIVRE ENSEMBLE </h1>
+<hr/>
 {%if charte is not empty %}
-    {{charte}}
+    {{charte| raw}}
     {%endif%}
 
+    
 {% endblock %}
+
