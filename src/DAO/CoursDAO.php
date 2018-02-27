@@ -22,7 +22,7 @@ public function findAll() {
   }
    
 public function findByTeacher($FID_PERS){
-              $sql = 'select distinct  LIBELLE_EC , ID_EC, COD_ELP, VOLUME_HEURE_CM,VOLUME_HEURE_TD,NB_CREDIT from EC, LIGNE_SERVICE L where L.FID_EC = EC.ID_EC and L.FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
+              $sql = 'select distinct  LIBELLE_EC , ID_EC, ID_LIGNE, COD_ELP, VOLUME_HEURE_CM,VOLUME_HEURE_TD,NB_CREDIT from EC, LIGNE_SERVICE L where L.FID_EC = EC.ID_EC and L.FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
       $result = $this->getDb()->fetchAll($sql);
      
       // Convert query result to an array of domain objects
