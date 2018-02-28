@@ -35,6 +35,7 @@ class MentionDAO extends DAO
         }
         return $mentions;
     }
+    
 
     
     protected function buildDomainObject(array $row) {

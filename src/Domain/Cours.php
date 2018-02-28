@@ -89,8 +89,17 @@ class Cours
      */    
     private $presentation;
     
+    private $diplome;
     
-    function getId_ligne() {
+    function getDiplome() {
+        return $this->diplome;
+    }
+
+    function setDiplome($diplome) {
+        $this->diplome = $diplome;
+    }
+
+        function getId_ligne() {
         return $this->id_ligne;
     }
 

@@ -27,6 +27,17 @@ class Diplome
     
     private  $semestre = array();
     
+    private $ec = array();
+    
+    function getEc() {
+        return $this->ec;
+    }
+
+    function setEc($ec) {
+        $this->ec = $ec;
+    }
+
+        
     function getSemestre() {
         return $this->semestre;
     }

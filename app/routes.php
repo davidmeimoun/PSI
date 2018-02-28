@@ -8,23 +8,23 @@ use GestionnaireLivret\Domain\ModulesEnseignement;
 use GestionnaireLivret\Domain\ModalitesControle;
 use GestionnaireLivret\Domain\Domaine;
 use GestionnaireLivret\Domain\Semestre;
-
+    
 use GestionnaireLivret\Domain\PresentationEc;
 use GestionnaireLivret\Form\Type\PasswordTypea;
 use GestionnaireLivret\Form\Type\UserType;
 use GestionnaireLivret\Form\Type\PresentationEcType;
 use GestionnaireLivret\Form\Type\EditLivretType;
-
+    
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-
+    
 // Add a user
 $app->match('/admin/user/add', function(Request $request) use ($app) {
     $user = new User();
     $teachers = $app['dao.user']->getAllTeacher();
     $userForm = $app['form.factory']->create(UserType::class, $user, array('teacher_choices' => $teachers));
     $userForm->handleRequest($request);
-    
+        
     if ($userForm->isSubmitted() && $userForm->isValid()) {
         // Retrieve select teacher informations
         $teacherID = $user->getId()->getId();
@@ -54,17 +54,17 @@ $app->match('/admin/user/add', function(Request $request) use ($app) {
         'title' => 'New user',
         'userForm' => $userForm->createView()));
 })->bind('admin_user_add');
-
-
-
-
+    
+    
+    
+    
 // Edit an existing user
 $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) {
     $user = $app['dao.user']->find($id);
     $teacher = $app['dao.user']->getEditTeacher($id);
     $userForm = $app['form.factory']->create(UserType::class, $user, array('teacher_choices' => $teacher));
     $userForm->handleRequest($request);
-    
+        
     if ($userForm->isSubmitted() && $userForm->isValid()) {
         $teacherID = $user->getId()->getId();
         $teacherNumHarpege = $user->getId()->getNumHarpege();
@@ -90,17 +90,17 @@ $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) 
         'title' => 'Edit user',
         'userForm' => $userForm->createView()));
 })->bind('admin_user_edit');
-
-
-
-
+    
+    
+    
+    
 // Edit an existing user
 $app->match('/user/{id}/editPassword', function($id, Request $request) use ($app) {
     $user = $app['dao.user']->find($id);
     $teacher = $app['dao.user']->getEditTeacher($id);
     $userForm = $app['form.factory']->create(PasswordTypea::class, $user, array('teacher_choices' => $teacher));
     $userForm->handleRequest($request);
-    
+        
     if ($userForm->isSubmitted() && $userForm->isValid()) {
         $teacherID = $user->getId()->getId();
         $teacherNumHarpege = $user->getId()->getNumHarpege();
@@ -126,8 +126,8 @@ $app->match('/user/{id}/editPassword', function($id, Request $request) use ($app
         'title' => 'Edit user',
         'userForm' => $userForm->createView()));
 })->bind('editPassword');
-
-
+    
+    
 // Remove a user
 $app->get('/admin/user/{id}/delete', function($id, Request $request) use ($app) {
     // Delete the user
@@ -136,16 +136,16 @@ $app->get('/admin/user/{id}/delete', function($id, Request $request) use ($app) 
     // Redirect to admin home page
     return $app->redirect($app['url_generator']->generate('admin'));
 })->bind('admin_user_delete');
-
-
+    
+    
 $app->get('/login', function(Request $request) use ($app) {
     return $app['twig']->render('login.html.twig', array(
         'error'         => $app['security.last_error']($request),
         'last_username' => $app['session']->get('_security.last_username'),
     ));
 })->bind('login');
-
-
+    
+    
 $app->match('/cours/{id}', function ($id, Request $request) use ($app) {
     $cours = $app['dao.cours']->find($id);
     $presentation = $app['dao.presentationEc']->findByEC($cours->getId_ligne());
@@ -170,13 +170,13 @@ $app->match('/cours/{id}', function ($id, Request $request) use ($app) {
         $modalite_controle = $presentation->getModaliteControle();
         $erasmus = $presentation->getErasmus();
     }
-
-    
+        
+        
     $presentationEcForm = $app['form.factory']->create(PresentationEcType::class, $presentation, array('objectifs' => $objectifs,'competences' =>$competences ,
         'prerequis' => $prerequis,'plan_cours' => $plan_cours,'bibliographie' => $bibliographie,'cours_en_ligne' => $cours_en_ligne,
         'modalite_controle' => $modalite_controle,'erasmus' =>$erasmus ));
     $presentationEcForm->handleRequest($request);
-    
+        
     if ($presentationEcForm->isSubmitted() && $presentationEcForm->isValid()) {
         $presEc = new PresentationEc();
         $presEc->setFidEc($cours->getId_ligne());
@@ -189,27 +189,57 @@ $app->match('/cours/{id}', function ($id, Request $request) use ($app) {
         $presEc->setCoursEnLigne($presentationEcForm['cours_en_ligne']->getData());
         $presEc->setModaliteControle($presentationEcForm['modalite_controle']->getData());
         $presEc->setErasmus($presentationEcForm['erasmus']->getData());
-        
+            
         $app['dao.presentationEc']->save($presEc);
         $app['session']->getFlashBag()->add('success', 'The informations was successfully saved.');
     }
-            
+        
     return $app['twig']->render('cours.html.twig', array('cours' => $cours,'presentationEcForm' => $presentationEcForm->createView()));
-
+        
 })->bind('coursDetail');
-
-
+    
+    
+    
+    
+    
 $app->get('/cours', function () use ($app) {
     $str =  $app['user']->getId();
+    $listIdDiplome=array();
+    $listDomaine = array();
+        
+        
+    //recupere la list des id des diplomes pour un prof
     $listCours = $app['dao.cours']->findByTeacher($str);
-    return $app['twig']->render('index.html.twig' ,array('coursList' =>$listCours));
+       foreach($listCours as $cours){
+           
+           $idDiplome = $cours->getDiplome();
+           $diplome = $app['dao.diplome']->find($idDiplome);
+               
+           if(!in_array($diplome->getId(), $listIdDiplome)){
+               array_push($listIdDiplome, $diplome->getId());
+           }
+               
+       }
+       $listDiplome = array();
+       foreach($listIdDiplome as $idDip){
+           $diplome = $app['dao.diplome']->find($idDip);
+           array_push($listDiplome, $diplome);
+               
+       }
+              foreach($listDiplome as $dip){
+ $dip->setEc($app['dao.cours']->findByDipomeEtProf($dip->getId(),$str));
+     
+       }
+           
+           
+    return $app['twig']->render('index.html.twig' ,array('coursList' =>$listCours,'listDiplome' => $listDiplome));
 })->bind('cours');
-
+    
 // Home page
 $app->get('/', function () use ($app) {
     return $app['twig']->render('empty.html.twig');
 })->bind('home');
-
+    
 $app->get('/admin', function() use ($app) {
     $cours = $app['dao.cours']->findAll();
     $users = $app['dao.user']->findAll();
@@ -217,10 +247,10 @@ $app->get('/admin', function() use ($app) {
         'coursList' => $cours,
         'users' => $users));
 })->bind('admin');
-
-
+    
+    
 $app->get('/ue/{id}', function ($id) use ($app) {
-  
+    
     $listUe = $app['dao.ue']->findByParcours($id);
     $ec = array();
     foreach($listUe as $ue)
@@ -230,38 +260,38 @@ $app->get('/ue/{id}', function ($id) use ($app) {
     }
         
         return $app['twig']->render('ue.html.twig' ,array('ueList' =>$listUe, 'parcours' => $id));
-    
+            
 })->bind('ue');
 $app->get('/parcours', function () use ($app) {
-  
+    
     $listParcours = $app['dao.parcours']->findAll();     
         return $app['twig']->render('parcours.html.twig' ,array('parcoursList' =>$listParcours));
-    
+            
 })->bind('parcours');
-
+    
 $app->get('/admin/domaine', function () use ($app) {
-  
+    
     $listDomaine = $app['dao.domaine']->findAll();     
         return $app['twig']->render('domaine.html.twig' ,array('domaineList' =>$listDomaine));
-    
+            
 })->bind('domaine');
-
+    
 $app->get('/admin/mention/{id}', function ($id) use ($app) {
-
+    
     $listMention = $app['dao.mention']->findByDomaine($id);     
         return $app['twig']->render('mention.html.twig' ,array('mentionList' =>$listMention));
-    
+            
 })->bind('mention');
-
+    
 $app->get('/admin/coursPourLeDiplome/{id}', function ($id) use ($app) {
     $nomDiplome = $app['dao.diplome']->find($id);
     $nombreDeSemestre = $app['dao.diplome']->nombreDeSemestreDuDiplome($id);
     $listSemestre = array();
-    
+        
          for($i = 1; $i <= $nombreDeSemestre; $i ++){
              $semestre = new Semestre();
              $semestre->setNumSemestre($i);
-             
+                 
        // On récupère les UE et EC d'un parcours
    $listUe = $app['dao.ue']->findByDiplomeEtSemestre($id,$i);
    $ec = array();
@@ -278,20 +308,20 @@ $app->get('/admin/coursPourLeDiplome/{id}', function ($id) use ($app) {
    $semestre->setDiplome($id);
    array_push($listSemestre, $semestre);
        }
-       
-   
-    
+           
+           
+           
         return $app['twig']->render('coursPourLeDiplome.html.twig' ,array('listSemestre' =>$listSemestre,'nomDiplome' => $nomDiplome));
-    
+            
 })->bind('coursPourLeDiplome');
-
+    
 $app->get('/diplome/{id}', function ($id) use ($app) {
     $listDiplome =  $app['dao.diplome']->findByMention($id);    
         return $app['twig']->render('diplome.html.twig' ,array('diplomeList' =>$listDiplome));
-    
+            
 })->bind('diplome');
-
-
+    
+    
 $app->get('/verifNewUser', function () use ($app) {
   $str = $app['user']->getNewUser();
   $id =  $app['user']->getId();
@@ -301,14 +331,14 @@ $app->get('/verifNewUser', function () use ($app) {
   else{
        return $app->redirect('http://localhost:8085/PSI/web/index.php/user/'.$id.'/editPassword');
   }
-    
-       
-    
+      
+      
+      
 })->bind('verifNewUser');
-
-
+    
+    
 $app->get('/generatePDF/{id}', function ($id) use ($app) {
- 
+    
     shell_exec('sudo wkhtmltopdf http://localhost/PSI/web/index.php/livret/'.$id.' /var/www/html/PSI/web/livret'.$id.'.pdf');    //$return = shell_exec('wkhtmltopdf http://localhost/GestionnaireLivret/Livret/web/index.php/ue/'+$id+' /var/html/GestionnaireLivret/Livret/views/livret.pdf');     
     return $app->redirect('http://localhost:8085/PSI/web/livret'.$id.'.pdf');
 })->bind('generatePDF');
@@ -318,7 +348,7 @@ $return = shell_exec('pandoc -s -r html http://localhost/PSI/web/index.php/ue/'.
         return $app->redirect('http://localhost:8085/PSI/web/livret'.$id.'.text');
 })->bind('generateMarkdown');
 $app->get('/enseignements/{id}', function ($id) use ($app) {
-  
+    
     $listUe = $app['dao.ue']->findByParcours($id);
     $ec = array();
     foreach($listUe as $ue)
@@ -332,44 +362,44 @@ $app->get('/enseignements/{id}', function ($id) use ($app) {
     }
         
         return $app['twig']->render('enseignements.html.twig' ,array('ueList' =>$listUe, 'parcours' => $id));
-    
+            
 })->bind('enseignements');
-
+    
 $app->get('/livret/{id}', function ($id) use ($app) {
-
+    
    // On récupère la mention
    $mention = $app['dao.livret']->findMention($id);
-   
+       
    // On récupère le calendrier
    $calendrier = $app['dao.livret']->findCalendrier($id);
    // On récupère l'organigramme
    $organigramme = $app['dao.organigramme']->find($id);
        //On récupère les services numériques
    $servicesNum = $app['dao.livret']->findServicesNumeriques($id);
-   
+       
    // On récupère la présentation de l'UE
    $presentationForm = $app['dao.livret']->findPresentation($id);
-   
+       
    // On récupère la charte du vivre ensemble
    $charte = $app['dao.livret']->findCharte();
-   
+       
    // On récupère les modalités de controle
    $modalites = $app['dao.livret']->findModalitesControle($id);
- 
+       
    // On récupère les stages
    $stages = $app['dao.livret']->findStages($id);
-   
+       
    // On récupère les modules enseignements
    $modules = $app['dao.livret']->findModulesEnseignement($id);
-   
+       
    $nomDiplome = $app['dao.diplome']->find($id);
     $nombreDeSemestre = $app['dao.diplome']->nombreDeSemestreDuDiplome($id);
     $listSemestre = array();
-    
+        
          for($i = 1; $i <= $nombreDeSemestre; $i ++){
              $semestre = new Semestre();
              $semestre->setNumSemestre($i);
-             
+                 
        // On récupère les UE et EC d'un parcours
    $listUe = $app['dao.ue']->findByDiplomeEtSemestre($id,$i);
    $ec = array();
@@ -387,37 +417,37 @@ $app->get('/livret/{id}', function ($id) use ($app) {
    array_push($listSemestre, $semestre);
        }
  return $app['twig']->render('livret.html.twig' ,array('listSemestre' =>$listSemestre,'nomDiplome' => $nomDiplome,'servicesNum'=> $servicesNum,'mention'=>$mention, 'parcours' => $id, 'organigramme'=>$organigramme, 'presentationForm'=>$presentationForm, 'charte'=>$charte,'modalites'=>$modalites,'stages'=>$stages,'modules'=>$modules, 'calendrier'=>$calendrier));
-   
+     
 })->bind('livret');
-
-
+    
+    
 // Modification du contenu d'un livret (Admin)
 $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
     
    // On récupère la mention
    $mention = $app['dao.livret']->findMention($id);
-   
+       
    // On récupère le calendrier
    $calendrier = $app['dao.livret']->findCalendrier($id);
    // On récupère l'organigramme
    $organigramme = $app['dao.organigramme']->find($id);
-   
-   
+       
+       
    // On récupère la présentation de l'UE
    $presentationForm = $app['dao.livret']->findPresentation($id);
-   
+       
    // On récupère la charte du vivre ensemble
    $charte = $app['dao.livret']->findCharte();
-   
+       
    // On récupère les modalités de controle
    $modalites = $app['dao.livret']->findModalitesControle($id);
- 
+       
    // On récupère les stages
    $stages = $app['dao.livret']->findStages($id);
-   
+       
    // On récupère les modules enseignements
    $modules = $app['dao.livret']->findModulesEnseignement($id);
-   
+       
    // On récupère les UE et EC d'un parcours
    $listUe = $app['dao.ue']->findByParcours($id);
    $ec = array();
@@ -430,7 +460,7 @@ $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
            }
       $ue->setEc($ec);
    }
-   
+       
     $livret = new Livret();
     $livretForm = $app['form.factory']->create(EditLivretType::class, $livret, ['calendrier' => $calendrier, 
         'ufr' =>$organigramme->getUfr(),'departement' =>$organigramme->getDepartement(),
@@ -442,7 +472,7 @@ $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
         'delivrance_diplome' => $modalites->getDelivrance_diplome(), 
         'charte' => $charte]);
     $livretForm->handleRequest($request);
-    
+        
     if ($livretForm->isSubmitted() && $livretForm->isValid()) {
         $organigramme = new Organigramme();
         $modulesEnseignement = new ModulesEnseignement();
@@ -460,7 +490,7 @@ $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
         $modulesEnseignement->setModules_transversaux($livretForm['modules_transversaux']->getData());
         $modulesEnseignement->setBonus_diplomes($livretForm['bonus_diplomes']->getData());
         $modulesEnseignement->setLangues_vivantes($livretForm['langues_vivantes']->getData());
-        
+            
         $livret->setModules_enseignement($modulesEnseignement);
         $livret->setStage($livretForm['stage']->getData());
         //Objectt ModalitesControle
@@ -470,14 +500,14 @@ $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
         $modalitesControle->setParticularite_validation($livretForm['particularite_validation']->getData());
         $modalitesControle->setDeroulement_charte_examens($livretForm['deroulement_charte_examens']->getData());
         $modalitesControle->setDelivrance_diplome($livretForm['delivrance_diplome']->getData());
-        
+            
         $livret->setModalites_examens($modalitesControle);
         $livret->setCharte($livretForm['charte']->getData());
-        
+            
         $app['dao.livret']->save($livret);
         $app['session']->getFlashBag()->add('success', 'The informations was successfully saved.');
     }
-            
+        
     return $app['twig']->render('EditLivret.html.twig', array('livretForm' => $livretForm->createView()));
-
+        
 })->bind('editLivret');

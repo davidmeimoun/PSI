@@ -22,7 +22,7 @@ public function findAll() {
   }
    
 public function findByTeacher($FID_PERS){
-              $sql = 'select distinct  LIBELLE_EC , ID_EC, COD_ELP, VOLUME_HEURE_CM,VOLUME_HEURE_TD,NB_CREDIT from EC, LIGNE_SERVICE L where L.FID_EC = EC.ID_EC and L.FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
+              $sql = 'select distinct  LIBELLE_EC , ID_EC, COD_ELP, FID_DIP, VOLUME_HEURE_CM,VOLUME_HEURE_TD,NB_CREDIT from EC, LIGNE_SERVICE L where L.FID_EC = EC.ID_EC and L.FID_PERS =' .$FID_PERS .'';// order by ID_DIP desc
       $result = $this->getDb()->fetchAll($sql);
      
       // Convert query result to an array of domain objects
@@ -46,8 +46,18 @@ public function findByTeacher($FID_PERS){
       }
       return $cours;
   }
-   
-   
+  public function findByDipomeEtProf($idDip, $idProf) {
+   $sql = 'select DISTINCT LIBELLE_EC, ID_EC ,FID_DIP, COD_ELP,VOLUME_HEURE_CM,VOLUME_HEURE_TD, NB_CREDIT from EC, DIPLOME dip, LIGNE_SERVICE ls where  dip.ID_DIP = EC.FID_DIP and ls.FID_PERS = ' .$idProf .' and ls.FID_EC = EC.ID_EC and EC.FID_DIP  = ' .$idDip .'';// order by ID_DIP desc
+      $result = $this->getDb()->fetchAll($sql);
+     
+      // Convert query result to an array of domain objects
+      $cours = array();
+      foreach ($result as $row) {
+          $coursId = $row['ID_EC'];
+          $cours[$coursId] = $this->buildDomainObject($row);
+      }
+      return $cours;
+  }
 public function find($id) {
       $sql = "select * from EC where ID_EC=?";
       $row = $this->getDb()->fetchAssoc($sql, array($id));
@@ -76,7 +86,7 @@ public function findByUE($ue) {
 protected function buildDomainObject(array $row) {
        $cours= new Cours();
       $cours->setId_ligne($row['ID_EC']);
-      //$cours->setNomEnseignant($row['NOM']);
+      $cours->setDiplome($row['FID_DIP']);
       //$cours->setNumHarpegeEnseignant($row['N_HARP']);
       $cours->setLibelle($row['LIBELLE_EC']);
       $cours->setCode($row['COD_ELP']);
