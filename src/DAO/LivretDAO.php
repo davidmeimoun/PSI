@@ -163,6 +163,7 @@ public function findMention($id) {
             'FID_DIP' => $livret->getOrganigramme()->getFid_dip(),
             'UFR' => $livret->getOrganigramme()->getUfr(),
             'DEPARTEMENT' => $livret->getOrganigramme()->getDepartement(),
+            'UNIVERSITE' => $livret->getOrganigramme()->getUniversite(),
             );
            
          if($this->isExistingInDB($livret->getOrganigramme()->getFid_dip(), 'ORGANIGRAMME')){
