@@ -22,6 +22,17 @@
         </div>
     </div>
     <div class="form-group">
+        {{ form_label(livretForm.universite, null, { 'label_attr':  {
+            'class': 'col-sm-2 control-label'
+        }}) }}
+        <div class="col-sm-8">
+            {{ form_errors(livretForm.universite) }}
+            {{ form_widget(livretForm.universite, { 'attr':  {
+                'class': 'ckeditor'
+            }}) }}
+        </div>
+    </div>
+    <div class="form-group">
         {{ form_label(livretForm.ufr, null, { 'label_attr':  {
             'class': 'col-sm-2 control-label'
         }}) }}

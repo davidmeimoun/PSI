@@ -11,6 +11,8 @@ namespace GestionnaireLivret\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -72,11 +74,14 @@ class PresentationEcType extends AbstractType {
                 'data' => $this->bibliographie,
                 'required' => false,
             ))
-                 ->add('cours_en_ligne', TextareaType::class, array(
-                'label' => 'Espace cours en ligne' ,
-                'data' => $this->cours_en_ligne,
+                 ->add('cours_en_ligne', ChoiceType::class, array(
+                 'label' => 'Espace cours en ligne' ,
+                 'choices' => array('OUI' => 'OUI', 'NON' => 'NON'),
+                 'expanded' => FALSE,
+                 'multiple' => false,
+                 'preferred_choices' => array('OUI'),
+                 'data' => $this->cours_en_ligne,
                  'required' => false,
-                'attr' => array('cols' => 60, 'rows' => 5),
             ))
                  ->add('modalite_controle', TextareaType::class, array(
                 'label' => 'Modalités de contôle' ,

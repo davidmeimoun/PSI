@@ -462,7 +462,7 @@ $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
    }
        
     $livret = new Livret();
-    $livretForm = $app['form.factory']->create(EditLivretType::class, $livret, ['calendrier' => $calendrier, 
+    $livretForm = $app['form.factory']->create(EditLivretType::class, $livret, ['calendrier' => $calendrier, 'universite' =>$organigramme->getUniversite(),
         'ufr' =>$organigramme->getUfr(),'departement' =>$organigramme->getDepartement(),
         'presentation' => $presentationForm,'maquette' => $mention,
         'modules_transversaux' => $modules->getModules_transversaux(), 'langues_vivantes' => $modules->getLangues_vivantes(),
@@ -482,6 +482,7 @@ $app->match('editLivret/{id}', function ($id, Request $request) use ($app) {
         //Object Organigramme
         $organigramme->setFid_dip($id);
         $organigramme->setDepartement($livretForm['departement']->getData());
+        $organigramme->setUniversite($livretForm['universite']->getData());
         $organigramme->setUfr($livretForm['ufr']->getData());
         $livret->setOrganigramme($organigramme);
         $livret->setPresentation($livretForm['presentation']->getData());

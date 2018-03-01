@@ -28,6 +28,7 @@ class EditLivretType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {   
         $this->calendrier = $options['calendrier'];
+        $this->universite = $options['universite'];
         $this->ufr = $options['ufr'];
         $this->departement = $options['departement'];
         $this->presentation = $options['presentation'];
@@ -48,6 +49,13 @@ class EditLivretType extends AbstractType {
                 'label' => 'Calendrier universitaire' ,
                 'data' => $this->calendrier,
                  'required' => false,
+                'attr' => array('cols' => 60, 'rows' => 5),
+            ))
+                ->add('universite', TextareaType::class, array(
+                'label' => 'Universite' ,
+                'data' => $this->universite,
+                'required' => false,
+                'mapped' => false,
                 'attr' => array('cols' => 60, 'rows' => 5),
             ))
                 ->add('ufr', TextareaType::class, array(
@@ -157,6 +165,7 @@ class EditLivretType extends AbstractType {
             'delivrance_diplome' => null,
             'charte' => null,
             'ufr' => null,
+            'universite' => null,
             'departement' => null,
             'langues_vivantes' => null
         ));
