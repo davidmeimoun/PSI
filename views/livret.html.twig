@@ -98,7 +98,7 @@
                 {% for cours in ue.ec %}
                                        <cours>
                                            
-              <table class="table-bordered table">
+                                                         <table class="table-bordered table">
 
             <thead class="active">
                 <th>Code Ec :{{ cours.code| raw }}</th>
@@ -106,7 +106,8 @@
                 <th>Volume horraire CM/TD : {{ cours.h_cm}}/{{ cours.h_td | raw}}</th>
                 <th>Enseignant : {{ cours.nomEnseignant| raw}}</th>
             </thead>
-
+                                                         </table>
+              <table class="table-bordered table">
 
             <form>
                 <tr>
@@ -231,4 +232,3 @@
 
     
 {% endblock %}
-
