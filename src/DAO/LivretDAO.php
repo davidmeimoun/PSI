@@ -159,6 +159,18 @@ public function findMention($id) {
             'descriptif' => $livret->getStage(),
             );
            
+           $organigrammeData = array(
+            'FID_DIP' => $livret->getOrganigramme()->getFid_dip(),
+            'UFR' => $livret->getOrganigramme()->getUfr(),
+            'DEPARTEMENT' => $livret->getOrganigramme()->getDepartement(),
+            );
+           
+         if($this->isExistingInDB($livret->getOrganigramme()->getFid_dip(), 'ORGANIGRAMME')){
+            $this->getDb()->update('ORGANIGRAMME', $organigrammeData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
+        } else {
+            $this->getDb()->insert('ORGANIGRAMME', $organigrammeData);
+        }
+           
         if($this->isExistingInDB($livret->getOrganigramme()->getFid_dip(), 'CALENDRIER_UNIVERSITAIRE')){
             $this->getDb()->update('CALENDRIER_UNIVERSITAIRE', $CalendrierData, array('FID_DIP' => $livret->getOrganigramme()->getFid_dip()));
         } else {
