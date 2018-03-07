@@ -155,7 +155,13 @@
                     <td colspan="4">
  <div class="form-group">
     <label for="exampleTextarea">Espace cours en ligne</label>
-    {%if not cours.presentation is empty %}{{cours.presentation.cours_en_ligne| raw}}{% endif %}
+    {%if not cours.presentation is empty %}
+      {%if cours.presentation.cours_en_ligne==1%}
+           <p>OUI</p>
+           {%else%}
+               <p>NON</p>
+   {% endif %}
+   {% endif %}
   </div>
                     </td>
                 </tr>
