@@ -15,3 +15,8 @@ Phase d'initialisation.
 4) tapez
 ``` $ vagrant up```
 5) lancez votre serveur et rendez vous sur l'url localhost:8085/PSI/web/index.php
+
+Documentation :
+
+Trello : https://trello.com/b/vz6P22r4/projet
+Cahier des charges : https://docs.google.com/document/d/1NfPQoJYYsL_NqYBhATtzBD2soXuVVWMyzyGGbFdGjY8/edit
